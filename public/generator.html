@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generator Link Tamu — IVORY SPIRAL BINDER</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ivory:#F8F4EA; --cream:#E9DFC9; --gold:#C6A66B; --gold-dark:#9B7C44; --taupe:#85765F; --charcoal:#38352F; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Plus Jakarta Sans', sans-serif; background:#EFE8D8; color:var(--charcoal); padding:16px; min-height:100vh; }
+    .card { max-width:560px; margin:20px auto; background:var(--ivory); border:1px solid var(--gold); border-radius:14px; padding:20px; box-shadow:0 10px 28px rgba(56,53,47,0.12); }
+    h1 { font-family:'Cormorant Garamond', serif; font-size:1.6rem; margin-bottom:4px; }
+    .sub { font-size:0.82rem; color:var(--taupe); margin-bottom:16px; }
+    .fg { margin-bottom:12px; }
+    .fg label { display:block; font-size:0.76rem; font-weight:600; color:var(--taupe); margin-bottom:4px; }
+    .fg input, .fg textarea { width:100%; padding:10px 12px; border:1px solid rgba(198,166,107,0.75); border-radius:8px; background:#FFFDF9; font-family:inherit; font-size:0.88rem; color:var(--charcoal); }
+    .row { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .btn { flex:1; min-width:140px; padding:10px 14px; border-radius:8px; border:1px solid var(--gold-dark); background:var(--charcoal); color:var(--ivory); font-weight:600; font-size:0.82rem; cursor:pointer; text-align:center; text-decoration:none; }
+    .btn-gold { background:linear-gradient(135deg,#D2B47C,var(--gold-dark)); color:#fff; }
+    .btn-outline { background:var(--ivory); color:var(--charcoal); }
+    .preview-box { margin-top:14px; padding:12px; border-radius:8px; background:var(--cream); font-size:0.82rem; word-break:break-all; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Generator Link Tamu</h1>
+    <p class="sub">Buat link undangan personal &amp; pesan WhatsApp secara instan tanpa database.</p>
+
+    <div class="fg">
+      <label for="base-url">URL Undangan Anda</label>
+      <input id="base-url" type="url" />
+    </div>
+    <div class="fg">
+      <label for="guest-name">Nama Tamu yang Diundang</label>
+      <input id="guest-name" type="text" placeholder="Contoh: Bpk. Ahmad Fauzi &amp; Keluarga" />
+    </div>
+    <div class="fg">
+      <label for="wa-phone">Nomor WhatsApp Tamu (opsional, contoh: 628123456789)</label>
+      <input id="wa-phone" type="text" placeholder="Kosongkan jika ingin memilih kontak di WA" />
+    </div>
+
+    <div class="preview-box" id="link-preview">Masukkan nama tamu untuk melihat link personal...</div>
+
+    <div class="row">
+      <button id="btn-copy-link" type="button" class="btn btn-outline">Salin Link Undangan</button>
+      <a id="btn-open-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Buka Pratinjau</a>
+    </div>
+    <div class="row">
+      <a id="btn-send-wa" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-gold">Kirim via WhatsApp</a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var baseEl = document.getElementById('base-url');
+      var nameEl = document.getElementById('guest-name');
+      var phoneEl = document.getElementById('wa-phone');
+      var previewEl = document.getElementById('link-preview');
+      var openEl = document.getElementById('btn-open-link');
+      var waEl = document.getElementById('btn-send-wa');
+      var copyBtn = document.getElementById('btn-copy-link');
+
+      baseEl.value = window.location.origin + '/';
+
+      function update() {
+        var base = baseEl.value.trim().replace(/\/+$/, '') + '/';
+        var name = nameEl.value.trim();
+        var url = name ? base + '?to=' + encodeURIComponent(name).replace(/%20/g, '+') : base;
+        previewEl.textContent = url;
+        openEl.href = url;
+
+        var sapaan = name || 'Bapak/Ibu/Saudara/i';
+        var msg = 'Assalamu\'alaikum Warahmatullahi Wabarakatuh.\n\nKepada Yth. ' + sapaan + ',\nDengan memohon rahmat dan ridha Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan:\n\nSaepudin Hidayatullah & Khodijah\nKamis, 31 Desember 2026\n\nSilakan buka undangan digital berikut:\n' + url;
+        var phone = phoneEl.value.replace(/[^0-9]/g, '');
+        waEl.href = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
+      }
+
+      baseEl.addEventListener('input', update);
+      nameEl.addEventListener('input', update);
+      phoneEl.addEventListener('input', update);
+      copyBtn.addEventListener('click', function () {
+        var text = previewEl.textContent;
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(function () {
+            copyBtn.textContent = 'Link Tersalin!';
+            setTimeout(function () { copyBtn.textContent = 'Salin Link Undangan'; }, 1800);
+          });
+        }
+      });
+
+      update();
+    })();
+  </script>
+</body>
+</html>
