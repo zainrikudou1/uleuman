@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — IVORY SPIRAL BINDER</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ivory: #F8F4EA; --cream: #E9DFC9; --gold: #C6A66B; --gold-dark: #9B7C44;
+      --taupe: #85765F; --charcoal: #38352F;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #EFE8D8; color: var(--charcoal); min-height: 100vh; padding: 16px;
+    }
+    .wrap { max-width: 1040px; margin: 0 auto; }
+    .topbar {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
+      background: var(--ivory); border: 1px solid var(--gold); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px;
+    }
+    .topbar h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.45rem; }
+    .btn {
+      border: 1px solid var(--gold-dark); background: var(--charcoal); color: var(--ivory);
+      padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-outline { background: var(--ivory); color: var(--charcoal); }
+    .btn-danger { background: #8B2635; border-color: #8B2635; color: #fff; }
+    .card {
+      background: var(--ivory); border: 1px solid rgba(198,166,107,0.6); border-radius: 12px; padding: 16px; margin-bottom: 16px;
+    }
+    .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .tab-btn {
+      padding: 8px 12px; border-radius: 8px; border: 1px solid var(--gold); background: var(--ivory);
+      color: var(--charcoal); font-size: 0.78rem; font-weight: 600; cursor: pointer;
+    }
+    .tab-btn.active { background: var(--charcoal); color: var(--ivory); border-color: var(--charcoal); }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    .fg { margin-bottom: 10px; }
+    .fg label { display: block; font-size: 0.74rem; font-weight: 600; color: var(--taupe); margin-bottom: 4px; }
+    .fg input, .fg textarea, .fg select {
+      width: 100%; padding: 8px 10px; border: 1px solid rgba(198,166,107,0.7); border-radius: 6px;
+      background: #FFFDF8; color: var(--charcoal); font-family: inherit; font-size: 0.84rem;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; }
+    th, td { padding: 8px; border-bottom: 1px solid var(--cream); text-align: left; }
+    th { background: var(--cream); font-weight: 700; }
+    .hidden { display: none !important; }
+    .status-msg { padding: 8px 12px; border-radius: 8px; background: var(--cream); font-size: 0.8rem; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div>
+        <h1>Dashboard Admin — Ivory Spiral Binder</h1>
+        <div style="font-size:0.78rem; color:var(--taupe);">Saepudin Hidayatullah &amp; Khodijah • Kamis, 31 Desember 2026</div>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <a href="/" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Pratinjau Binder</a>
+        <button id="btn-logout" type="button" class="btn btn-danger hidden">Keluar</button>
+      </div>
+    </header>
+
+    <!-- Login Card -->
+    <section id="login-card" class="card" style="max-width:420px; margin:40px auto;">
+      <h2 style="font-family:'Cormorant Garamond',serif; margin-bottom:8px;">Login Admin</h2>
+      <p style="font-size:0.8rem; color:var(--taupe); margin-bottom:12px;">Masukkan kata sandi admin untuk mengelola data undangan, galeri, musik, tamu, dan RSVP.</p>
+      <form id="login-form">
+        <div class="fg">
+          <label for="admin-password">Kata Sandi Admin</label>
+          <input id="admin-password" type="password" required placeholder="••••••••" />
+        </div>
+        <button type="submit" class="btn" style="width:100%; justify-content:center;">Masuk Dashboard</button>
+      </form>
+      <div id="login-status" class="status-msg hidden"></div>
+    </section>
+
+    <!-- Main Admin Workspace -->
+    <main id="admin-workspace" class="hidden">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="tab-data">Mempelai &amp; Acara</button>
+        <button class="tab-btn" data-tab="tab-media">Galeri &amp; Foto</button>
+        <button class="tab-btn" data-tab="tab-music">Musik &amp; Tema</button>
+        <button class="tab-btn" data-tab="tab-guests">Tamu &amp; Link WA</button>
+        <button class="tab-btn" data-tab="tab-rsvp">RSVP &amp; Export CSV</button>
+      </div>
+
+      <!-- TAB 1: Mempelai, Orang Tua, Acara, Lokasi, Kalam Hikmah -->
+      <section id="tab-data" class="panel active card">
+        <h2 style="font-family:'Cormorant Garamond',serif; margin-bottom:12px;">Data Resmi Undangan</h2>
+        <div class="grid-2">
+          <div>
+            <h3 style="font-size:0.9rem; margin-bottom:8px;">Mempelai Pria</h3>
+            <div class="fg"><label>Nama Lengkap</label><input id="f-groom-name" type="text" /></div>
+            <div class="fg"><label>Nama Panggilan</label><input id="f-groom-nick" type="text" /></div>
+            <div class="fg"><label>Tulisan Arab (RTL)</label><input id="f-groom-arabic" type="text" dir="rtl" /></div>
+            <div class="fg"><label>Orang Tua</label><input id="f-groom-parents" type="text" /></div>
+          </div>
+          <div>
+            <h3 style="font-size:0.9rem; margin-bottom:8px;">Mempelai Wanita</h3>
+            <div class="fg"><label>Nama Lengkap</label><input id="f-bride-name" type="text" /></div>
+            <div class="fg"><label>Nama Panggilan</label><input id="f-bride-nick" type="text" /></div>
+            <div class="fg"><label>Tulisan Arab (RTL)</label><input id="f-bride-arabic" type="text" dir="rtl" /></div>
+            <div class="fg"><label>Orang Tua</label><input id="f-bride-parents" type="text" /></div>
+          </div>
+        </div>
+        <hr style="margin:14px 0; border:none; border-top:1px solid var(--cream);" />
+        <div class="grid-2">
+          <div>
+            <h3 style="font-size:0.9rem; margin-bottom:8px;">Acara 1: Resepsi Pernikahan</h3>
+            <div class="fg"><label>Hari/Tanggal</label><input id="f-resepsi-date" type="text" /></div>
+            <div class="fg"><label>Waktu</label><input id="f-resepsi-time" type="text" /></div>
+            <div class="fg"><label>Tempat</label><input id="f-resepsi-venue" type="text" /></div>
+          </div>
+          <div>
+            <h3 style="font-size:0.9rem; margin-bottom:8px;">Acara 2: Tablig Akbar Mujarab</h3>
+            <div class="fg"><label>Subjudul</label><input id="f-tablig-sub" type="text" /></div>
+            <div class="fg"><label>Waktu</label><input id="f-tablig-time" type="text" /></div>
+            <div class="fg"><label>Lokasi</label><input id="f-tablig-address" type="text" /></div>
+          </div>
+        </div>
+        <div class="grid-2" style="margin-top:10px;">
+          <div class="fg"><label>Alamat Lengkap Lokasi</label><input id="f-loc-address" type="text" /></div>
+          <div class="fg"><label>Tautan Google Maps</label><input id="f-loc-maps" type="url" /></div>
+        </div>
+        <div class="fg">
+          <label>Kalam Hikmah Pernikahan (3 Paragraf dipisah baris kosong)</label>
+          <textarea id="f-hikmah" rows="5"></textarea>
+        </div>
+        <div class="fg"><label>Kalimat Penutup Kalam Hikmah</label><input id="f-hikmah-closing" type="text" /></div>
+        <button id="btn-save-config" type="button" class="btn">Simpan Perubahan Data</button>
+        <div id="config-status" class="status-msg hidden"></div>
+      </section>
+
+      <!-- TAB 2: Media & Galeri -->
+      <section id="tab-media" class="panel card">
+        <h2 style="font-family:'Cormorant Garamond',serif; margin-bottom:12px;">Kelola Foto Mempelai &amp; Galeri Scrapbook</h2>
+        <div class="grid-2">
+          <div class="fg">
+            <label>Slot Foto</label>
+            <select id="m-slot">
+              <option value="gallery">Galeri Scrapbook (Hal 8)</option>
+              <option value="groom">Portrait Mempelai Pria (Hal 4)</option>
+              <option value="bride">Portrait Mempelai Wanita (Hal 5)</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Orientasi (untuk Galeri)</label>
+            <select id="m-orientation">
+              <option value="portrait">Portrait</option>
+              <option value="landscape">Landscape</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="fg"><label>Judul / Keterangan Foto</label><input id="m-title" type="text" placeholder="Contoh: Momen Lamaran" /></div>
+          <div class="fg"><label>Pilih File Gambar</label><input id="m-file" type="file" accept="image/*" /></div>
+        </div>
+        <button id="btn-upload-media" type="button" class="btn">Unggah Foto</button>
+        <div id="media-list" class="grid-2" style="margin-top:14px;"></div>
+      </section>
+
+      <!-- TAB 3: Musik, Warna, & Halaman -->
+      <section id="tab-music" class="panel card">
+        <h2 style="font-family:'Cormorant Garamond',serif; margin-bottom:12px;">Pengaturan Musik, Warna, &amp; Autoplay</h2>
+        <div class="grid-2">
+          <div class="fg">
+            <label>Status Musik Latar</label>
+            <select id="f-music-enabled">
+              <option value="true">Aktif</option>
+              <option value="false">Nonaktif</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Jeda Semi-Autoplay (ms)</label>
+            <input id="f-autoplay-ms" type="number" min="2000" max="10000" step="200" />
+          </div>
+        </div>
+        <div class="fg">
+          <label>Unggah Musik Latar (MP3/OGG, opsional — maks 800 KB)</label>
+          <input id="f-music-file" type="file" accept="audio/*" />
+        </div>
+        <div class="grid-2">
+          <div class="fg"><label>Warna Ivory</label><input id="f-col-ivory" type="color" /></div>
+          <div class="fg"><label>Warna Champagne Gold</label><input id="f-col-gold" type="color" /></div>
+          <div class="fg"><label>Warna Warm Charcoal</label><input id="f-col-charcoal" type="color" /></div>
+        </div>
+        <button id="btn-save-theme" type="button" class="btn">Simpan Musik &amp; Tema</button>
+      </section>
+
+      <!-- TAB 4: Tamu & Link WhatsApp -->
+      <section id="tab-guests" class="panel card">
+        <h2 style="font-family:'Cormorant Garamond',serif; margin-bottom:12px;">Kelola Tamu &amp; Generator Link WhatsApp</h2>
+        <div class="grid-2">
+          <div class="fg"><label>Nama Tamu</label><input id="g-name" type="text" placeholder="Contoh: Bpk. Ahmad Fauzi" /></div>
+          <div class="fg"><label>No. WhatsApp (opsional, 628xxx)</label><input id="g-phone" type="text" placeholder="6281234567890" /></div>
+        </div>
+        <button id="btn-add-guest" type="button" class="btn">Tambah Tamu &amp; Buat Link</button>
+        <div id="guest-link-preview" class="status-msg hidden"></div>
+        <table>
+          <thead><tr><th>Nama Tamu</th><th>Link Personal</th><th>Aksi</th></tr></thead>
+          <tbody id="guests-tbody"></tbody>
+        </table>
+      </section>
+
+      <!-- TAB 5: RSVP & Export CSV -->
+      <section id="tab-rsvp" class="panel card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <h2 style="font-family:'Cormorant Garamond',serif;">Daftar RSVP &amp; Ucapan</h2>
+          <a href="/api/rsvp-export" class="btn">Export RSVP ke CSV</a>
+        </div>
+        <table>
+          <thead><tr><th>Nama</th><th>Status</th><th>Jml</th><th>Pesan &amp; Doa</th><th>Aksi</th></tr></thead>
+          <tbody id="rsvp-tbody"></tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script src="/js/official-data.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

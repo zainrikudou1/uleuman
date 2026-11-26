@@ -1,0 +1,8 @@
+name = "ivory-spiral-binder-saepudin-khodijah"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "public"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ivory_binder_db"
+database_id = "f1bc60b6-5b8c-4b41-8487-aa8893e913aa"

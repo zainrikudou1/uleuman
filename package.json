@@ -1,0 +1,16 @@
+{
+  "name": "ivory-spiral-binder-wedding",
+  "version": "1.0.0",
+  "private": true,
+  "description": "IVORY SPIRAL BINDER — Saepudin Hidayatullah & Khodijah | Premium Interactive 3D Wedding Invitation on Cloudflare Pages",
+  "scripts": {
+    "test": "node tests/run-qa.mjs",
+    "dev": "npx wrangler pages dev public --d1=DB",
+    "deploy": "npx wrangler pages deploy public",
+    "db:migrate:local": "npx wrangler d1 migrations apply ivory_binder_db --local",
+    "db:migrate:remote": "npx wrangler d1 migrations apply ivory_binder_db --remote"
+  },
+  "devDependencies": {
+    "wrangler": "^3.80.0"
+  }
+}

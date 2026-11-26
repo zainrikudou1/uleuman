@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>IVORY SPIRAL BINDER — Saepudin Hidayatullah &amp; Khodijah</title>
+  <meta name="description" content="Undangan Pernikahan Digital 3D Ivory Spiral Binder — Saepudin Hidayatullah &amp; Khodijah, Kamis 31 Desember 2026." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/binder.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top Music & Identity Bar -->
+    <header class="top-bar">
+      <div class="brand-mini">Ivory Spiral Binder</div>
+      <div class="music-controls">
+        <button id="btn-music-toggle" type="button" class="btn-pill" aria-label="Putar atau jeda musik">♪ Musik: OFF</button>
+        <input id="music-volume" class="volume-slider" type="range" min="0" max="1" step="0.05" value="0.55" aria-label="Volume musik" />
+      </div>
+    </header>
+
+    <!-- 3D Binder Stage -->
+    <main class="binder-stage">
+      <div class="binder-book" id="binder-book">
+        <!-- Metallic Champagne Gold Spiral -->
+        <div class="binder-spiral" id="binder-spiral" aria-hidden="true"></div>
+
+        <!-- 10-Page Binder Viewport -->
+        <div class="binder-viewport" id="binder-viewport">
+          <!-- HALAMAN 1: COVER DEPAN -->
+          <section class="binder-page binder-cover-page" data-page="1">
+            <div class="page-inner">
+              <div class="page-frame">
+                <div class="cover-badge">THE WEDDING INVITATION</div>
+                <svg class="cover-ornament" viewBox="0 0 120 36" fill="none" aria-hidden="true">
+                  <path d="M10 18 Q35 4 60 18 Q85 32 110 18" stroke="#C6A66B" stroke-width="1.3" fill="none"/>
+                  <circle cx="60" cy="18" r="3.5" fill="#C6A66B"/>
+                  <circle cx="38" cy="13" r="1.8" fill="#C6A66B"/>
+                  <circle cx="82" cy="23" r="1.8" fill="#C6A66B"/>
+                </svg>
+                <h1 class="couple-title" id="cover-couple">Saepudin Hidayatullah &amp; Khodijah</h1>
+                <div class="arabic-text cover-arabic" id="cover-arabic" dir="rtl" lang="ar">سيف الدين هداية الله &amp; خديجة</div>
+                <div class="divider-gold"><span class="divider-diamond"></span></div>
+                <div class="cover-date" id="cover-date">Kamis, 31 Desember 2026</div>
+                <div class="guest-box">
+                  <div class="guest-label">Kepada Yth.</div>
+                  <div class="guest-name" id="guest-name-display">Bapak/Ibu/Saudara/i</div>
+                </div>
+                <button id="btn-open-invitation" type="button" class="btn-primary">BUKA UNDANGAN</button>
+              </div>
+              <span class="page-number-badge">1</span>
+            </div>
+          </section>
+
+          <!-- HALAMAN 2: PEMBUKAAN -->
+          <section class="binder-page" data-page="2">
+            <div class="page-inner">
+              <div class="page-frame">
+                <div class="section-eyebrow">Mukadimah</div>
+                <div class="arabic-text" style="font-size:1.55rem; margin:10px 0;" dir="rtl" lang="ar">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+                <div class="divider-gold"><span class="divider-diamond"></span></div>
+                <p class="body-serif" style="font-weight:700; margin-bottom:12px;">Assalamu'alaikum Warahmatullahi Wabarakatuh.</p>
+                <p class="body-serif" style="margin-bottom:12px;">Dengan memohon rahmat dan ridha Allah SWT, kami bermaksud menyelenggarakan acara pernikahan putra-putri kami.</p>
+                <p class="body-serif">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.</p>
+              </div>
+              <span class="page-number-badge">2</span>
+            </div>
+          </section>
+
+          <!-- HALAMAN 3: KALAM HIKMAH PERNIKAHAN -->
+          <section class="binder-page" data-page="3">
+            <div class="page-inner">
+              <div class="page-frame">
+                <div class="section-eyebrow">Catatan Hikmah</div>
+                <h2 class="section-title" style="margin-bottom:12px;">Kalam Hikmah Pernikahan</h2>
+                <div class="hikmah-sheet" id="hikmah-body">
+                  <p>Rumah tangga bukanlah sekadar pertemuan dua insan dalam satu ikatan, melainkan perjalanan dua jiwa untuk saling menyempurnakan dalam ketaatan.</p>
+                  <p>Cinta bukan hanya tentang menemukan seseorang yang selalu sejalan, tetapi tentang kesediaan untuk tetap bergandengan tangan ketika jalan kehidupan tidak selalu mudah.</p>
+                  <p>Sebab pernikahan yang indah bukanlah yang tanpa ujian, melainkan yang senantiasa menjadikan Allah sebagai tujuan dan keridhaan-Nya sebagai pedoman.</p>
+                  <p class="hikmah-closing">Berlayarlah bersama dalam bahtera kasih, berlabuhlah pada kesabaran, dan jadikan takwa sebagai kompas perjalanan.</p>
+                </div>
+              </div>
+              <span class="page-number-badge">3</span>
+            </div>
+          </section>
+
+          <!-- HALAMAN 4: MEMPELAI PRIA -->
+          <section class="binder-page" data-page="4">
+            <div class="page-inner">
+              <div class="page-frame">
+                <div class="section-eyebrow">Mempelai Pria</div>
+                <div class="portrait-frame" id="groom-portrait"></div>
+                <h2 class="section-title" id="groom-name">SAEPUDIN HIDAYATULLAH</h2>
+                <div class="arabic-text" id="groom-arabic" style="font-size:1.45rem; margin:4px 0;" dir="rtl" lang="ar">سيف الدين هداية الله</div>
+                <div style="text-align:center; font-family:var(--font-serif); font-style:italic; color:var(--taupe); margin-bottom:8px;" id="groom-nick">(Udin)</div>
+                <div class="divider-gold"><span class="divider-diamond"></span></div>
+                <div style="text-align:center; font-size:0.74rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--taupe);">Putra dari</div>
+                <p class="body-serif" id="groom-parents" style="margin-top:4px;">Putra dari Bapak Alm. Tatang Sholihin dan Ibu Siti Jaujah.</p>
+              </div>
+              <span class="page-number-badge">4</span>
+            </div>
+          </section>
+
+          <!-- HALAMAN 5: MEMPELAI WANITA -->
+          <section class="binder-page" data-page="5">
+            <div class="page-inner">
+              <div class="page-frame">
+                <div class="section-eyebrow">Mempelai Wanita</div>
+                <div class="portrait-frame" id="bride-portrait"></div>
+                <h2 class="section-title" id="bride-name">KHODIJAH</h2>
+                <div class="arabic-text" id="bride-arabic" style="font-size:1.55rem; margin:4px 0;" dir="rtl" lang="ar">خديجة</div>
+                <div style="text-align:center; font-family:var(--font-serif); font-style:italic; color:var(--taupe); margin-bottom:8px;" id="bride-nick">(Dijah)</div>
+                <div class="divider-gold"><span class="divider-diamond"></span></div>
+                <div style="text-align:center; font-size:0.74rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--taupe);">Putri dari</div>
+                <p class="body-serif" id="bride-parents" style="margin-top:4px;">Putri dari Bapak Muhammad Junaedi dan Ibu Imas Rohibah.</p>
+              </div>
+              <span class="page-number-badge">5</span>
+            </div>
+          </section>
+
+          <!-- HALAMAN 6: RESEPSI PERNIKAHAN -->
+          <section class="binder-page" data-page="6">
+            <div class="page-inner">
+              <div class="page-frame">
+                <div class="section-eyebrow">Rangkaian Acara Pertama (Siang)</div>
+                <h2 class="section-title" id="resepsi-title" style="margin-bottom:10px;">RESEPSI PERNIKAHAN</h2>
+                <div class="event-card">
+                  <div style="font-family:var(--font-serif); font-size:1.15rem; font-weight:700;" id="resepsi-date">Kamis, 31 Desember 2026</div>
+                  <div style="font-size:0.86rem; font-weight:600; color:var(--gold-dark); margin:6px 0;" id="resepsi-time">Pukul: 08.00 WIB – selesai</div>
+                  <div class="divider-gold"><span class="divider-diamond"></span></div>
+                  <div style="font-size:0.82rem; font-weight:700; margin-bottom:4px;" id="resepsi-venue">Tempat: Kediaman Mempelai Wanita</div>
+                  <div class="body-sans" id="resepsi-address">Kp. Ninggar RT 01 RW 12, Desa Katapang, Kecamatan Katapang, Kabupaten Bandung.</div>
+                </div>
+                <div class="countdown-grid" aria-label="Hitung mundur acara">
+                  <div class="countdown-cell"><div class="countdown-num" id="cd-days">00</div><div class="countdown-unit">Hari</div></div>
+                  <div class="countdown-cell"><div class="countdown-num" id="cd-hours">00</div><div class="countdown-unit">Jam</div></div>
+                  <div class="countdown-cell"><div class="countdown-num" id="cd-mins">00</div><div class="countdown-unit">Menit</div></div>
+                  <div class="countdown-cell"><div class="countdown-num" id="cd-secs">00</div><div class="countdown-unit">Detik</div></div>
+                </div>
+              </div>
+              <span class="page-number-badge">6</span>
+            </div>
+          </section>
+
+          <!-- HALAMAN 7: TABLIG AKBAR MUJARAB -->
+          <section class="binder-page" data-page="7">
+            <div class="page-inner">
+              <div class="page-frame">
+                <div class="event-card evening">
+                  <div class="section-eyebrow">Acara Tersendiri • Malam Hari</div>
+                  <h2 class="section-title" id="tablig-title">TABLIG AKBAR MUJARAB</h2>
+                  <div style="font-family:var(--font-serif); font-style:italic; color:var(--gold-light); margin-top:4px;" id="tablig-sub">Muludan Rajaban</div>
+                  <div class="divider-gold"><span class="divider-diamond"></span></div>
+                  <div style="font-family:var(--font-serif); font-size:1.1rem; font-weight:700;" id="tablig-date">Kamis, 31 Desember 2026</div>
+                  <div style="font-size:0.88rem; font-weight:600; color:var(--gold-light); margin:8px 0;" id="tablig-time">Pukul: 19.00 WIB – selesai</div>
+                  <div style="font-size:0.74rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--gold-light); margin-top:6px;">Lokasi</div>
+                  <div style="font-size:0.82rem; line-height:1.5; margin-top:3px;" id="tablig-address">Kp. Ninggar RT 01 RW 12, Desa Katapang, Kecamatan Katapang, Kabupaten Bandung.</div>
+                  <div style="margin-top:12px; padding:7px 10px; border-radius:6px; background:rgba(198,166,107,0.16); font-size:0.74rem; color:var(--gold-light);">
+                    Catatan: Acara ini merupakan rangkaian tersendiri pada malam hari setelah Resepsi Pernikahan.
+                  </div>
+                </div>
+              </div>
+              <span class="page-number-badge">7</span>
+            </div>
+          </section>
+
+          <!-- HALAMAN 8: GALERI FOTO -->
+          <section class="binder-page" data-page="8">
+            <div class="page-inner">
+              <div class="page-frame" style="justify-content:flex-start;">
+                <div class="section-eyebrow">Scrapbook Binder</div>
+                <h2 class="section-title">Galeri Foto</h2>
+                <div class="scrapbook-grid" id="scrapbook-grid"></div>
+              </div>
+              <span class="page-number-badge">8</span>
+            </div>
+          </section>
+
+          <!-- HALAMAN 9: LOKASI DAN TANDA KASIH -->
+          <section class="binder-page" data-page="9">
+            <div class="page-inner">
+              <div class="page-frame" style="justify-content:flex-start; gap:8px;">
+                <div class="info-card">
+                  <div class="section-eyebrow" style="text-align:left;">Bagian A • Lokasi Acara</div>
+                  <p class="body-sans" id="loc-address" style="font-weight:600;">Kp. Ninggar RT 01 RW 12, Desa Katapang, Kecamatan Katapang, Kabupaten Bandung.</p>
+                  <div class="qr-wrap">
+                    <div class="qr-box" id="qr-code-box"></div>
+                    <div style="display:flex; flex-direction:column; gap:6px; flex:1;">
+                      <a id="btn-open-maps" href="https://maps.app.goo.gl/opps7tLHJCER1qWw9" target="_blank" rel="noopener noreferrer" class="btn-gold">BUKA LOKASI</a>
+                      <button id="btn-copy-address" type="button" class="btn-outline">SALIN ALAMAT</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="info-card" style="margin-bottom:0;">
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                    <span class="section-eyebrow" style="margin:0;">Bagian B • Tanda Kasih</span>
+                    <span class="dana-badge">DANA</span>
+                  </div>
+                  <p style="font-size:0.74rem; line-height:1.45; color:var(--taupe); margin-bottom:6px;" id="dana-note">Bagi keluarga, kerabat, dan sahabat yang berkenan menyampaikan tanda kasih, dapat melalui informasi berikut. Kehadiran serta doa restu merupakan kebahagiaan yang paling berarti bagi kami.</p>
+                  <div style="font-family:var(--font-serif); font-size:1.15rem; font-weight:700;" id="dana-number">+62 895-2451-8794</div>
+                  <div style="font-size:0.78rem; color:var(--taupe); margin-bottom:6px;" id="dana-name">a.n. Khodijah</div>
+                  <button id="btn-copy-dana" type="button" class="btn-outline" style="width:100%;">SALIN NOMOR DANA</button>
+                  <div style="font-size:0.68rem; color:var(--taupe); text-align:center; margin-top:4px;">Pemberian tanda kasih bersifat sukarela.</div>
+                </div>
+              </div>
+              <span class="page-number-badge">9</span>
+            </div>
+          </section>
+
+          <!-- HALAMAN 10: RSVP DAN PENUTUP -->
+          <section class="binder-page" data-page="10">
+            <div class="page-inner">
+              <div class="page-frame" style="justify-content:flex-start;">
+                <div class="section-eyebrow">Konfirmasi &amp; Doa Restu</div>
+                <h2 class="section-title" style="font-size:1.25rem; margin-bottom:8px;">RSVP &amp; Penutup</h2>
+                <form id="rsvp-form">
+                  <div class="form-group">
+                    <label class="form-label" for="rsvp-name">Nama Tamu</label>
+                    <input id="rsvp-name" class="form-input" type="text" required maxlength="80" placeholder="Nama lengkap Anda" />
+                  </div>
+                  <div style="display:grid; grid-template-columns:1.4fr 1fr; gap:6px;">
+                    <div class="form-group">
+                      <label class="form-label" for="rsvp-attendance">Kehadiran</label>
+                      <select id="rsvp-attendance" class="form-select">
+                        <option value="hadir">Hadir</option>
+                        <option value="tidak_hadir">Tidak Hadir</option>
+                        <option value="ragu">Masih Ragu</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="rsvp-count">Jumlah</label>
+                      <input id="rsvp-count" class="form-input" type="number" min="1" max="20" value="1" />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="rsvp-message">Pesan dan Doa</label>
+                    <textarea id="rsvp-message" class="form-textarea" rows="2" maxlength="400" placeholder="Tuliskan doa restu untuk kedua mempelai..."></textarea>
+                  </div>
+                  <button type="submit" class="btn-primary" style="padding:8px 12px; font-size:0.78rem;">Kirim RSVP &amp; Doa</button>
+                </form>
+
+                <div class="wishes-list" id="wishes-list"></div>
+
+                <div style="margin-top:8px; padding-top:8px; border-top:1px solid rgba(198,166,107,0.4); font-family:var(--font-serif); font-size:0.82rem; line-height:1.45; text-align:center;">
+                  <p>Tiada yang lebih kami harapkan selain doa dan restu dari keluarga, kerabat, serta sahabat sekalian. Semoga setiap langkah menuju hari bahagia ini senantiasa berada dalam limpahan rahmat dan keberkahan Allah SWT. Atas kehadiran, doa, dan perhatian yang diberikan, kami mengucapkan terima kasih.</p>
+                  <p style="font-weight:700; margin-top:4px;">Wassalamu'alaikum Warahmatullahi Wabarakatuh.</p>
+                  <p style="color:var(--taupe); margin-top:2px;">Keluarga Besar: <strong id="closing-family">Saepudin Hidayatullah &amp; Khodijah.</strong></p>
+                </div>
+              </div>
+              <span class="page-number-badge">10</span>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <!-- Navigation & Semi-Autoplay Dock -->
+    <nav class="nav-dock" aria-label="Navigasi Halaman Binder">
+      <div class="nav-row">
+        <button id="btn-cover" type="button" class="btn-pill">Cover</button>
+        <button id="btn-prev" type="button" class="btn-pill">‹ Prev</button>
+        <span id="page-indicator" style="font-size:0.76rem; font-weight:700; color:var(--charcoal);">Hal 1 / 10</span>
+        <button id="btn-next" type="button" class="btn-pill">Next ›</button>
+        <button id="btn-autoplay-toggle" type="button" class="btn-pill">▶ Play</button>
+      </div>
+      <div class="page-dots" id="page-dots"></div>
+    </nav>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+    <div class="lightbox-inner">
+      <img id="lightbox-img" src="" alt="Pratinjau Galeri" />
+      <div id="lightbox-caption" style="margin-top:8px; font-family:var(--font-serif);"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js" defer></script>
+  <script src="/js/official-data.js"></script>
+  <script src="/js/qr-generator.js"></script>
+  <script src="/js/binder-engine.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
