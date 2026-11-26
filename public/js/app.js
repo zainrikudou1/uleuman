@@ -472,6 +472,13 @@
   }
 
   function bindEvents() {
+    /* Prevent StPageFlip from flipping page when interacting with inputs, buttons, links, or forms */
+    document.querySelectorAll('.binder-page input, .binder-page textarea, .binder-page select, .binder-page button, .binder-page a, #rsvp-form').forEach(function (el) {
+      ['mousedown', 'touchstart', 'pointerdown'].forEach(function (evt) {
+        el.addEventListener(evt, function (e) { e.stopPropagation(); }, { passive: true });
+      });
+    });
+
     if ($('btn-open-invitation')) {
       $('btn-open-invitation').addEventListener('click', function () {
         startMusic();

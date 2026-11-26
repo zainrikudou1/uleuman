@@ -227,17 +227,18 @@
   function buildWaLink(name, phone) {
     var url = buildInviteUrl(name);
     var msg =
-      'Bismillahirrahmanirrahim.\n' +
-      'Assalamu\'alaikum Warahmatullahi Wabarakatuh.\n\n' +
-      'Kepada Yth. ' + name + ',\n\n' +
+      'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\n' +
+      'اَلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ\n\n' +
+      '✨ *Kepada Yth. ' + name + ',*\n\n' +
       'Dengan memohon rahmat dan ridha Allah SWT, tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan putra-putri kami:\n\n' +
-      '*Saepudin Hidayatullah & Khodijah*\n' +
-      'Hari/Tanggal: Kamis, 31 Desember 2026\n\n' +
-      'Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir serta memberikan doa restu.\n\n' +
-      'Informasi lengkap dan undangan digital dapat dibuka melalui tautan berikut:\n' +
+      '💍 *Saepudin Hidayatullah & Khodijah*\n' +
+      '🗓️ *Hari/Tanggal:* Kamis, 31 Desember 2026\n' +
+      '📍 *Lokasi:* Kp. Ninggar RT 01 RW 12, Desa Katapang, Kab. Bandung\n\n' +
+      'Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir serta memberikan doa restu. 🤲\n\n' +
+      '💌 *Buka Undangan Digital:*\n' +
       url + '\n\n' +
-      'Atas perhatian dan doa restunya, kami ucapkan terima kasih.\n' +
-      'Wassalamu\'alaikum Warahmatullahi Wabarakatuh.';
+      'Atas perhatian, kehadiran, dan doa restunya, kami ucapkan terima kasih.\n' +
+      'وَالسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ';
     var cleanPhone = String(phone || '').replace(/[^0-9]/g, '');
     if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.slice(1);
     return 'https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent(msg);
