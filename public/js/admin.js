@@ -4,11 +4,76 @@
   var cfg = JSON.parse(JSON.stringify(global.OFFICIAL_INVITATION_DATA || {}));
   function $(id) { return document.getElementById(id); }
 
+  var BUILTIN_PAGE_LABELS = [
+    { num: 2, label: 'Halaman 2 — Pembukaan' },
+    { num: 3, label: 'Halaman 3 — Kalam Hikmah Pernikahan' },
+    { num: 4, label: 'Halaman 4 — Mempelai Pria' },
+    { num: 5, label: 'Halaman 5 — Mempelai Wanita' },
+    { num: 6, label: 'Halaman 6 — Resepsi Pernikahan' },
+    { num: 7, label: 'Halaman 7 — Tablig Akbar Mujarab' },
+    { num: 8, label: 'Halaman 8 — Galeri Foto' },
+    { num: 9, label: 'Halaman 9 — Lokasi & Tanda Kasih' },
+    { num: 10, label: 'Halaman 10 — RSVP & Penutup' }
+  ];
+
   function showStatus(id, msg) {
     var el = $(id);
     if (!el) return;
     el.textContent = msg;
     el.classList.remove('hidden');
+  }
+
+  function renderPageSettings() {
+    var grid = $('builtin-pages-grid');
+    if (grid) {
+      grid.innerHTML = '';
+      var vis = cfg.pageVisibility || {};
+      BUILTIN_PAGE_LABELS.forEach(function (item) {
+        var lbl = document.createElement('label');
+        lbl.className = 'check-row';
+        var cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = vis[item.num] !== false && vis[String(item.num)] !== false;
+        cb.setAttribute('data-page-vis', String(item.num));
+        lbl.appendChild(cb);
+        var span = document.createElement('span');
+        span.textContent = item.label;
+        lbl.appendChild(span);
+        grid.appendChild(lbl);
+      });
+    }
+
+    var listEl = $('custom-pages-list');
+    if (listEl) {
+      listEl.innerHTML = '';
+      var custom = Array.isArray(cfg.customPages) ? cfg.customPages : [];
+      custom.forEach(function (cp, idx) {
+        var row = document.createElement('div');
+        row.className = 'check-row';
+        row.style.justifyContent = 'space-between';
+        var info = document.createElement('div');
+        info.innerHTML = '<strong>' + escapeHtml(cp.title || 'Halaman Kustom') + '</strong>' +
+          (cp.eyebrow ? ' <span style="color:var(--taupe);">(' + escapeHtml(cp.eyebrow) + ')</span>' : '');
+        var del = document.createElement('button');
+        del.type = 'button';
+        del.className = 'btn btn-danger';
+        del.textContent = 'Hapus';
+        del.addEventListener('click', function () {
+          cfg.customPages.splice(idx, 1);
+          pushConfig('pages-status', 'Halaman kustom dihapus & disimpan.');
+          renderPageSettings();
+        });
+        row.appendChild(info);
+        row.appendChild(del);
+        listEl.appendChild(row);
+      });
+    }
+  }
+
+  function escapeHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
   }
 
   function fillForm() {
@@ -38,6 +103,8 @@
     $('f-col-ivory').value = (cfg.theme && cfg.theme.ivory) || '#F8F4EA';
     $('f-col-gold').value = (cfg.theme && cfg.theme.gold) || '#C6A66B';
     $('f-col-charcoal').value = (cfg.theme && cfg.theme.charcoal) || '#38352F';
+
+    renderPageSettings();
   }
 
   function collectForm() {
@@ -67,10 +134,15 @@
     cfg.theme.ivory = $('f-col-ivory').value;
     cfg.theme.gold = $('f-col-gold').value;
     cfg.theme.charcoal = $('f-col-charcoal').value;
+
+    cfg.pageVisibility = cfg.pageVisibility || { 1: true };
+    cfg.pageVisibility[1] = true;
+    document.querySelectorAll('input[data-page-vis]').forEach(function (cb) {
+      cfg.pageVisibility[cb.getAttribute('data-page-vis')] = cb.checked;
+    });
   }
 
-  function saveConfig() {
-    collectForm();
+  function pushConfig(statusId, okMsg) {
     fetch('/api/invitation', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -78,10 +150,15 @@
     })
       .then(function (r) { return r.json(); })
       .then(function (res) {
-        if (res.ok) showStatus('config-status', 'Perubahan berhasil disimpan ke D1.');
-        else showStatus('config-status', res.error || 'Gagal menyimpan.');
+        if (res.ok) showStatus(statusId || 'config-status', okMsg || 'Perubahan berhasil disimpan ke D1.');
+        else showStatus(statusId || 'config-status', res.error || 'Gagal menyimpan.');
       })
-      .catch(function () { showStatus('config-status', 'Gagal terhubung ke server.'); });
+      .catch(function () { showStatus(statusId || 'config-status', 'Gagal terhubung ke server.'); });
+  }
+
+  function saveConfig() {
+    collectForm();
+    pushConfig('config-status', 'Perubahan berhasil disimpan ke D1.');
   }
 
   function compressImage(file, cb) {
@@ -149,8 +226,20 @@
 
   function buildWaLink(name, phone) {
     var url = buildInviteUrl(name);
-    var msg = 'Assalamu\'alaikum Warahmatullahi Wabarakatuh.\n\nKepada Yth. ' + name + ',\nDengan penuh hormat kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri pernikahan Saepudin Hidayatullah & Khodijah pada Kamis, 31 Desember 2026.\n\nBuka undangan digital:\n' + url;
+    var msg =
+      'Bismillahirrahmanirrahim.\n' +
+      'Assalamu\'alaikum Warahmatullahi Wabarakatuh.\n\n' +
+      'Kepada Yth. ' + name + ',\n\n' +
+      'Dengan memohon rahmat dan ridha Allah SWT, tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan putra-putri kami:\n\n' +
+      '*Saepudin Hidayatullah & Khodijah*\n' +
+      'Hari/Tanggal: Kamis, 31 Desember 2026\n\n' +
+      'Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir serta memberikan doa restu.\n\n' +
+      'Informasi lengkap dan undangan digital dapat dibuka melalui tautan berikut:\n' +
+      url + '\n\n' +
+      'Atas perhatian dan doa restunya, kami ucapkan terima kasih.\n' +
+      'Wassalamu\'alaikum Warahmatullahi Wabarakatuh.';
     var cleanPhone = String(phone || '').replace(/[^0-9]/g, '');
+    if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.slice(1);
     return 'https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent(msg);
   }
 
@@ -253,6 +342,27 @@
 
     $('btn-save-config').addEventListener('click', saveConfig);
     $('btn-save-theme').addEventListener('click', saveConfig);
+    $('btn-save-pages').addEventListener('click', function () {
+      collectForm();
+      pushConfig('pages-status', 'Pengaturan halaman berhasil disimpan ke D1.');
+    });
+
+    $('btn-add-custom-page').addEventListener('click', function () {
+      var title = $('cp-title').value.trim();
+      var body = $('cp-body').value.trim();
+      var eyebrow = $('cp-eyebrow').value.trim();
+      if (!title || !body) {
+        showStatus('pages-status', 'Judul dan isi halaman wajib diisi.');
+        return;
+      }
+      cfg.customPages = Array.isArray(cfg.customPages) ? cfg.customPages : [];
+      cfg.customPages.push({ eyebrow: eyebrow, title: title, body: body });
+      $('cp-eyebrow').value = '';
+      $('cp-title').value = '';
+      $('cp-body').value = '';
+      renderPageSettings();
+      pushConfig('pages-status', 'Halaman baru ditambahkan & disimpan ke D1.');
+    });
 
     $('f-music-file').addEventListener('change', function (e) {
       var file = e.target.files[0];
@@ -300,7 +410,6 @@
       });
     });
 
-    /* Check existing session */
     fetch('/api/admin/guests').then(function (r) {
       if (r.ok) enterAdmin();
     }).catch(function () {});

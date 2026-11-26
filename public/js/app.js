@@ -10,6 +10,7 @@
   var ambientTimer = null;
   var isMusicPlaying = false;
   var musicVolume = cfg.music ? cfg.music.volume : 0.55;
+  var binderInitialized = false;
 
   function $(id) { return document.getElementById(id); }
 
@@ -77,6 +78,85 @@
     if (theme.charcoal) r.setProperty('--charcoal', theme.charcoal);
   }
 
+  function applyDynamicPages() {
+    var viewport = $('binder-viewport');
+    if (!viewport) return;
+
+    /* Remove previously injected custom pages */
+    viewport.querySelectorAll('.binder-page[data-custom="true"]').forEach(function (el) {
+      el.remove();
+    });
+
+    /* Apply visibility for built-in pages (Page 1 Cover is always visible) */
+    var vis = cfg.pageVisibility || {};
+    for (var p = 2; p <= 10; p++) {
+      var el = viewport.querySelector('.binder-page[data-page="' + p + '"]');
+      if (el) {
+        var visible = vis[p] !== false && vis[String(p)] !== false;
+        el.style.display = visible ? '' : 'none';
+        el.setAttribute('data-hidden', visible ? 'false' : 'true');
+      }
+    }
+
+    /* Inject admin custom pages before Page 10 (or at end if Page 10 hidden) */
+    var customList = Array.isArray(cfg.customPages) ? cfg.customPages : [];
+    var page10 = viewport.querySelector('.binder-page[data-page="10"]');
+    customList.forEach(function (cp) {
+      var sec = document.createElement('section');
+      sec.className = 'binder-page';
+      sec.setAttribute('data-custom', 'true');
+      var inner = document.createElement('div');
+      inner.className = 'page-inner';
+      var frame = document.createElement('div');
+      frame.className = 'page-frame';
+      if (cp.eyebrow) {
+        var eb = document.createElement('div');
+        eb.className = 'section-eyebrow';
+        eb.textContent = cp.eyebrow;
+        frame.appendChild(eb);
+      }
+      var h2 = document.createElement('h2');
+      h2.className = 'section-title';
+      h2.style.marginBottom = '10px';
+      h2.textContent = cp.title || 'Informasi Tambahan';
+      frame.appendChild(h2);
+
+      var div = document.createElement('div');
+      div.className = 'divider-gold';
+      div.innerHTML = '<span class="divider-diamond"></span>';
+      frame.appendChild(div);
+
+      String(cp.body || '').split(/\n\s*\n/).filter(Boolean).forEach(function (para) {
+        var pEl = document.createElement('p');
+        pEl.className = 'body-serif';
+        pEl.style.marginBottom = '10px';
+        pEl.textContent = para;
+        frame.appendChild(pEl);
+      });
+
+      var badge = document.createElement('span');
+      badge.className = 'page-number-badge';
+      inner.appendChild(frame);
+      inner.appendChild(badge);
+      sec.appendChild(inner);
+
+      if (page10) viewport.insertBefore(sec, page10);
+      else viewport.appendChild(sec);
+    });
+
+    /* Remove hidden built-in pages from DOM before StPageFlip init */
+    viewport.querySelectorAll('.binder-page[data-hidden="true"]').forEach(function (el) {
+      el.remove();
+    });
+
+    /* Renumber visible pages */
+    var activePages = Array.prototype.slice.call(viewport.querySelectorAll('.binder-page'));
+    activePages.forEach(function (pg, idx) {
+      var b = pg.querySelector('.page-number-badge');
+      if (b) b.textContent = String(idx + 1);
+    });
+  }
+
   function populateData() {
     applyTheme(cfg.theme);
 
@@ -91,9 +171,9 @@
     }
 
     /* Page 1: Cover */
-    $('cover-couple').textContent = cfg.groom.fullName + ' & ' + cfg.bride.fullName;
-    $('cover-arabic').textContent = cfg.groom.arabicName + '  &  ' + cfg.bride.arabicName;
-    $('cover-date').textContent = cfg.dateLabel;
+    if ($('cover-couple')) $('cover-couple').textContent = cfg.groom.fullName + ' & ' + cfg.bride.fullName;
+    if ($('cover-arabic')) $('cover-arabic').textContent = cfg.groom.arabicName + '  &  ' + cfg.bride.arabicName;
+    if ($('cover-date')) $('cover-date').textContent = cfg.dateLabel;
 
     /* Page 3: Kalam Hikmah */
     var hikmahBox = $('hikmah-body');
@@ -113,53 +193,65 @@
     }
 
     /* Page 4: Groom */
-    $('groom-name').textContent = cfg.groom.fullName.toUpperCase();
-    $('groom-arabic').textContent = cfg.groom.arabicName;
-    $('groom-nick').textContent = '(' + cfg.groom.nickname + ')';
-    $('groom-parents').textContent = cfg.groom.parents;
-    renderPortrait($('groom-portrait'), cfg.media && cfg.media.groomPhoto, 'S', cfg.groom.nickname);
+    if ($('groom-name')) {
+      $('groom-name').textContent = cfg.groom.fullName.toUpperCase();
+      $('groom-arabic').textContent = cfg.groom.arabicName;
+      $('groom-nick').textContent = '(' + cfg.groom.nickname + ')';
+      $('groom-parents').textContent = cfg.groom.parents;
+      renderPortrait($('groom-portrait'), cfg.media && cfg.media.groomPhoto, 'S', cfg.groom.nickname);
+    }
 
     /* Page 5: Bride */
-    $('bride-name').textContent = cfg.bride.fullName.toUpperCase();
-    $('bride-arabic').textContent = cfg.bride.arabicName;
-    $('bride-nick').textContent = '(' + cfg.bride.nickname + ')';
-    $('bride-parents').textContent = cfg.bride.parents;
-    renderPortrait($('bride-portrait'), cfg.media && cfg.media.bridePhoto, 'K', cfg.bride.nickname);
+    if ($('bride-name')) {
+      $('bride-name').textContent = cfg.bride.fullName.toUpperCase();
+      $('bride-arabic').textContent = cfg.bride.arabicName;
+      $('bride-nick').textContent = '(' + cfg.bride.nickname + ')';
+      $('bride-parents').textContent = cfg.bride.parents;
+      renderPortrait($('bride-portrait'), cfg.media && cfg.media.bridePhoto, 'K', cfg.bride.nickname);
+    }
 
     /* Page 6: Resepsi */
-    $('resepsi-title').textContent = cfg.events.resepsi.title.toUpperCase();
-    $('resepsi-date').textContent = cfg.events.resepsi.dayDate;
-    $('resepsi-time').textContent = 'Pukul: ' + cfg.events.resepsi.time;
-    $('resepsi-venue').textContent = 'Tempat: ' + cfg.events.resepsi.venue;
-    $('resepsi-address').textContent = cfg.events.resepsi.address;
+    if ($('resepsi-title')) {
+      $('resepsi-title').textContent = cfg.events.resepsi.title.toUpperCase();
+      $('resepsi-date').textContent = cfg.events.resepsi.dayDate;
+      $('resepsi-time').textContent = 'Pukul: ' + cfg.events.resepsi.time;
+      $('resepsi-venue').textContent = 'Tempat: ' + cfg.events.resepsi.venue;
+      $('resepsi-address').textContent = cfg.events.resepsi.address;
+    }
 
     /* Page 7: Tablig Akbar */
-    $('tablig-title').textContent = cfg.events.tablig.title.toUpperCase();
-    $('tablig-sub').textContent = cfg.events.tablig.subtitle || 'Muludan Rajaban';
-    $('tablig-date').textContent = cfg.events.tablig.dayDate;
-    $('tablig-time').textContent = 'Pukul: ' + cfg.events.tablig.time;
-    $('tablig-address').textContent = cfg.events.tablig.address;
+    if ($('tablig-title')) {
+      $('tablig-title').textContent = cfg.events.tablig.title.toUpperCase();
+      $('tablig-sub').textContent = cfg.events.tablig.subtitle || 'Muludan Rajaban';
+      $('tablig-date').textContent = cfg.events.tablig.dayDate;
+      $('tablig-time').textContent = 'Pukul: ' + cfg.events.tablig.time;
+      $('tablig-address').textContent = cfg.events.tablig.address;
+    }
 
     /* Page 8: Gallery */
     renderGallery(cfg.media && cfg.media.gallery ? cfg.media.gallery : []);
 
     /* Page 9: Location & DANA */
-    $('loc-address').textContent = cfg.location.address;
-    $('btn-open-maps').href = cfg.location.mapsUrl;
-    var qrTarget = $('qr-code-box');
-    if (qrTarget && global.IvoryQR) {
-      qrTarget.innerHTML = global.IvoryQR.toSVG(cfg.location.mapsUrl, {
-        fg: '#38352F',
-        bg: '#F8F4EA',
-        quiet: 2
-      });
+    if ($('loc-address')) {
+      $('loc-address').textContent = cfg.location.address;
+      $('btn-open-maps').href = cfg.location.mapsUrl;
+      var qrTarget = $('qr-code-box');
+      if (qrTarget && global.IvoryQR) {
+        qrTarget.innerHTML = global.IvoryQR.toSVG(cfg.location.mapsUrl, {
+          fg: '#38352F',
+          bg: '#F8F4EA',
+          quiet: 2
+        });
+      }
+      $('dana-number').textContent = cfg.gift.accountNumber;
+      $('dana-name').textContent = 'a.n. ' + cfg.gift.accountName;
+      $('dana-note').textContent = cfg.gift.note;
     }
-    $('dana-number').textContent = cfg.gift.accountNumber;
-    $('dana-name').textContent = 'a.n. ' + cfg.gift.accountName;
-    $('dana-note').textContent = cfg.gift.note;
 
     /* Page 10: Closing */
-    $('closing-family').textContent = cfg.groom.fullName + ' & ' + cfg.bride.fullName + '.';
+    if ($('closing-family')) {
+      $('closing-family').textContent = cfg.groom.fullName + ' & ' + cfg.bride.fullName + '.';
+    }
   }
 
   function renderPortrait(container, src, initial, label) {
@@ -233,6 +325,7 @@
   }
 
   function startCountdown() {
+    if (!$('cd-days')) return;
     clearInterval(countdownTimer);
     var targetMs = new Date(cfg.events.resepsi.isoStart || '2026-12-31T08:00:00+07:00').getTime();
     function tick() {
@@ -264,7 +357,7 @@
       audioEl.play().then(function () {
         isMusicPlaying = true;
         updateMusicUI();
-      }).catch(function () { /* browser blocked until interaction */ });
+      }).catch(function () {});
       return;
     }
 
@@ -294,7 +387,7 @@
         osc.start(now);
         osc.stop(now + 1.65);
       }, 1700);
-    } catch (e) { /* ignore Web Audio errors */ }
+    } catch (e) {}
   }
 
   function stopMusic() {
@@ -322,53 +415,11 @@
     $('btn-next').disabled = pageIdx >= total - 1;
   }
 
-  function loadRemoteConfigAndWishes() {
-    fetch('/api/invitation')
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (data) {
-        if (data && data.config) {
-          cfg = Object.assign({}, cfg, data.config);
-          if (data.media) cfg.media = data.media;
-          populateData();
-        }
-      })
-      .catch(function () { /* fallback to official-data.js */ });
+  function initBinder() {
+    if (binderInitialized) return;
+    binderInitialized = true;
 
-    fetch('/api/rsvp')
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (data) {
-        if (data && Array.isArray(data.items)) {
-          renderWishes(data.items);
-        }
-      })
-      .catch(function () { /* offline/local preview */ });
-  }
-
-  function renderWishes(items) {
-    var box = $('wishes-list');
-    if (!box) return;
-    box.innerHTML = '';
-    if (!items.length) {
-      var empty = document.createElement('div');
-      empty.className = 'wish-item';
-      empty.textContent = 'Jadilah yang pertama mengirimkan doa restu.';
-      box.appendChild(empty);
-      return;
-    }
-    items.slice(0, 12).forEach(function (w) {
-      var item = document.createElement('div');
-      item.className = 'wish-item';
-      var strong = document.createElement('strong');
-      strong.textContent = w.guest_name + ' (' + w.attendance.replace('_', ' ') + '): ';
-      var msg = document.createElement('span');
-      msg.textContent = w.message || 'Semoga sakinah mawaddah warahmah.';
-      item.appendChild(strong);
-      item.appendChild(msg);
-      box.appendChild(item);
-    });
-  }
-
-  function init() {
+    applyDynamicPages();
     populateData();
     startCountdown();
 
@@ -380,11 +431,8 @@
         global.IvoryBinderEngine.renderPageHoles(p, 14);
       });
 
-      pageCtrl = new global.IvoryBinderEngine.PageFlipController($('binder-viewport'), pages, function (idx, source) {
+      pageCtrl = new global.IvoryBinderEngine.PageFlipController($('binder-viewport'), pages, function (idx) {
         updateNavUI(idx);
-        if (source === 'flip' && autoCtrl && autoCtrl.isPlaying) {
-          /* StPageFlip manual drag pauses autoplay */
-        }
       });
 
       autoCtrl = new global.IvoryBinderEngine.AutoFlipController(
@@ -400,7 +448,6 @@
       );
     }
 
-    /* Build direct page dots */
     var dotsWrap = $('page-dots');
     if (dotsWrap && pageCtrl) {
       dotsWrap.innerHTML = '';
@@ -421,14 +468,19 @@
     }
 
     updateNavUI(0);
+    bindEvents();
+  }
 
-    $('btn-open-invitation').addEventListener('click', function () {
-      startMusic();
-      pageCtrl.next('open');
-      if (!cfg.autoplay || cfg.autoplay.enabled !== false) {
-        autoCtrl.play();
-      }
-    });
+  function bindEvents() {
+    if ($('btn-open-invitation')) {
+      $('btn-open-invitation').addEventListener('click', function () {
+        startMusic();
+        pageCtrl.next('open');
+        if (!cfg.autoplay || cfg.autoplay.enabled !== false) {
+          autoCtrl.play();
+        }
+      });
+    }
 
     $('btn-prev').addEventListener('click', function () {
       autoCtrl.handleManualInteraction();
@@ -459,63 +511,106 @@
       if (audioEl) audioEl.volume = musicVolume;
     });
 
-    $('btn-copy-address').addEventListener('click', function () {
-      copyText(cfg.location.address, 'Alamat');
-    });
+    if ($('btn-copy-address')) {
+      $('btn-copy-address').addEventListener('click', function () {
+        copyText(cfg.location.address, 'Alamat');
+      });
+    }
 
-    $('btn-copy-dana').addEventListener('click', function () {
-      copyText(cfg.gift.accountNumber, 'Nomor DANA');
-    });
+    if ($('btn-copy-dana')) {
+      $('btn-copy-dana').addEventListener('click', function () {
+        copyText(cfg.gift.accountNumber, 'Nomor DANA');
+      });
+    }
 
     $('lightbox').addEventListener('click', function () {
       $('lightbox').classList.remove('open');
     });
 
-    $('rsvp-form').addEventListener('submit', function (e) {
-      e.preventDefault();
-      var payload = {
-        guest_name: sanitizeText($('rsvp-name').value, 80),
-        attendance: $('rsvp-attendance').value,
-        guest_count: parseInt($('rsvp-count').value || '1', 10),
-        message: sanitizeText($('rsvp-message').value, 400)
-      };
-      if (!payload.guest_name) {
-        showToast('Mohon isi nama tamu terlebih dahulu');
-        return;
-      }
-      fetch('/api/rsvp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-        .then(function (r) { return r.json(); })
-        .then(function (res) {
-          if (res && res.ok) {
-            showToast('Terima kasih, konfirmasi RSVP tersimpan');
-            $('rsvp-message').value = '';
-            loadRemoteConfigAndWishes();
-          } else {
-            showToast((res && res.error) || 'Gagal menyimpan RSVP');
-          }
+    if ($('rsvp-form')) {
+      $('rsvp-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var payload = {
+          guest_name: sanitizeText($('rsvp-name').value, 80),
+          attendance: $('rsvp-attendance').value,
+          guest_count: parseInt($('rsvp-count').value || '1', 10),
+          message: sanitizeText($('rsvp-message').value, 400)
+        };
+        if (!payload.guest_name) {
+          showToast('Mohon isi nama tamu terlebih dahulu');
+          return;
+        }
+        fetch('/api/rsvp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
         })
-        .catch(function () {
-          showToast('RSVP tercatat secara lokal (mode pratinjau)');
-          var box = $('wishes-list');
-          if (box) {
-            var item = document.createElement('div');
-            item.className = 'wish-item';
-            var strong = document.createElement('strong');
-            strong.textContent = payload.guest_name + ' (' + payload.attendance.replace('_', ' ') + '): ';
-            var msg = document.createElement('span');
-            msg.textContent = payload.message || 'Semoga sakinah mawaddah warahmah.';
-            item.appendChild(strong);
-            item.appendChild(msg);
-            box.insertBefore(item, box.firstChild);
-          }
-        });
-    });
+          .then(function (r) { return r.json(); })
+          .then(function (res) {
+            if (res && res.ok) {
+              showToast('Terima kasih, konfirmasi RSVP tersimpan');
+              $('rsvp-message').value = '';
+              loadWishes();
+            } else {
+              showToast((res && res.error) || 'Gagal menyimpan RSVP');
+            }
+          })
+          .catch(function () {
+            showToast('RSVP tercatat secara lokal (mode pratinjau)');
+          });
+      });
+    }
+  }
 
-    loadRemoteConfigAndWishes();
+  function loadWishes() {
+    fetch('/api/rsvp')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (data && Array.isArray(data.items)) {
+          renderWishes(data.items);
+        }
+      })
+      .catch(function () {});
+  }
+
+  function renderWishes(items) {
+    var box = $('wishes-list');
+    if (!box) return;
+    box.innerHTML = '';
+    if (!items.length) {
+      var empty = document.createElement('div');
+      empty.className = 'wish-item';
+      empty.textContent = 'Jadilah yang pertama mengirimkan doa restu.';
+      box.appendChild(empty);
+      return;
+    }
+    items.slice(0, 12).forEach(function (w) {
+      var item = document.createElement('div');
+      item.className = 'wish-item';
+      var strong = document.createElement('strong');
+      strong.textContent = w.guest_name + ' (' + w.attendance.replace('_', ' ') + '): ';
+      var msg = document.createElement('span');
+      msg.textContent = w.message || 'Semoga sakinah mawaddah warahmah.';
+      item.appendChild(strong);
+      item.appendChild(msg);
+      box.appendChild(item);
+    });
+  }
+
+  function init() {
+    fetch('/api/invitation')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (data && data.config) {
+          cfg = Object.assign({}, cfg, data.config);
+          if (data.media) cfg.media = data.media;
+        }
+      })
+      .catch(function () {})
+      .finally(function () {
+        initBinder();
+        loadWishes();
+      });
   }
 
   document.addEventListener('DOMContentLoaded', init);
