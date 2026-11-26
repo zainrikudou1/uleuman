@@ -50,7 +50,8 @@
       accountNumber: '+62 895-2451-8794',
       accountName: 'Khodijah',
       note: 'Bagi keluarga, kerabat, dan sahabat yang berkenan menyampaikan tanda kasih, dapat melalui informasi berikut. Kehadiran serta doa restu merupakan kebahagiaan yang paling berarti bagi kami.',
-      voluntaryNote: 'Pemberian tanda kasih bersifat sukarela.'
+      voluntaryNote: 'Pemberian tanda kasih bersifat sukarela.',
+      extraAccounts: []
     },
     kalamHikmah: {
       paragraphs: [
@@ -86,10 +87,16 @@
       enabled: true,
       intervalMs: 3800
     },
+    animation: {
+      mode: 'stpageflip',
+      flipTimeMs: 750,
+      shadowOpacity: 0.45
+    },
     pageVisibility: {
       1: true, 2: true, 3: true, 4: true, 5: true,
       6: true, 7: true, 8: true, 9: true, 10: true
     },
+    pageOrder: ['2', '3', '4', '5', '6', '7', '8', '9', '10'],
     customPages: [],
     media: {
       groomPhoto: '',

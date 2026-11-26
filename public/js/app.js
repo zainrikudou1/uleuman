@@ -82,29 +82,31 @@
     var viewport = $('binder-viewport');
     if (!viewport) return;
 
-    /* Remove previously injected custom pages */
     viewport.querySelectorAll('.binder-page[data-custom="true"]').forEach(function (el) {
       el.remove();
     });
 
-    /* Apply visibility for built-in pages (Page 1 Cover is always visible) */
     var vis = cfg.pageVisibility || {};
+    var pageMap = {};
     for (var p = 2; p <= 10; p++) {
       var el = viewport.querySelector('.binder-page[data-page="' + p + '"]');
       if (el) {
         var visible = vis[p] !== false && vis[String(p)] !== false;
-        el.style.display = visible ? '' : 'none';
-        el.setAttribute('data-hidden', visible ? 'false' : 'true');
+        if (!visible) {
+          el.remove();
+        } else {
+          pageMap[String(p)] = el;
+        }
       }
     }
 
-    /* Inject admin custom pages before Page 10 (or at end if Page 10 hidden) */
     var customList = Array.isArray(cfg.customPages) ? cfg.customPages : [];
-    var page10 = viewport.querySelector('.binder-page[data-page="10"]');
-    customList.forEach(function (cp) {
+    customList.forEach(function (cp, idx) {
+      var key = cp.id || ('cp_' + idx);
       var sec = document.createElement('section');
       sec.className = 'binder-page';
       sec.setAttribute('data-custom', 'true');
+      sec.setAttribute('data-page-key', key);
       var inner = document.createElement('div');
       inner.className = 'page-inner';
       var frame = document.createElement('div');
@@ -139,17 +141,22 @@
       inner.appendChild(frame);
       inner.appendChild(badge);
       sec.appendChild(inner);
-
-      if (page10) viewport.insertBefore(sec, page10);
-      else viewport.appendChild(sec);
+      pageMap[key] = sec;
     });
 
-    /* Remove hidden built-in pages from DOM before StPageFlip init */
-    viewport.querySelectorAll('.binder-page[data-hidden="true"]').forEach(function (el) {
-      el.remove();
+    var order = Array.isArray(cfg.pageOrder) && cfg.pageOrder.length
+      ? cfg.pageOrder.slice()
+      : ['2', '3', '4', '5', '6', '7', '8', '9', '10'];
+
+    /* Append any keys present in pageMap that are missing from order */
+    Object.keys(pageMap).forEach(function (k) {
+      if (order.indexOf(k) === -1) order.push(k);
     });
 
-    /* Renumber visible pages */
+    order.forEach(function (k) {
+      if (pageMap[k]) viewport.appendChild(pageMap[k]);
+    });
+
     var activePages = Array.prototype.slice.call(viewport.querySelectorAll('.binder-page'));
     activePages.forEach(function (pg, idx) {
       var b = pg.querySelector('.page-number-badge');
@@ -256,6 +263,38 @@
       $('dana-name').textContent = 'a.n. ' + cfg.gift.accountName;
       $('dana-note').textContent = cfg.gift.note;
       if ($('dana-voluntary') && cfg.gift.voluntaryNote) $('dana-voluntary').textContent = cfg.gift.voluntaryNote;
+      var extraWrap = $('extra-gift-accounts');
+      if (!extraWrap && $('btn-copy-dana')) {
+        extraWrap = document.createElement('div');
+        extraWrap.id = 'extra-gift-accounts';
+        extraWrap.style.cssText = 'margin-top:8px; display:flex; flex-direction:column; gap:6px;';
+        $('btn-copy-dana').parentNode.insertBefore(extraWrap, $('dana-voluntary'));
+      }
+      if (extraWrap) {
+        extraWrap.innerHTML = '';
+        (cfg.gift.extraAccounts || []).forEach(function (acc) {
+          var row = document.createElement('div');
+          row.style.cssText = 'padding:7px 9px; border-radius:6px; background:rgba(248,244,234,0.85); border:1px solid rgba(198,166,107,0.45); display:flex; align-items:center; justify-content:space-between; gap:8px;';
+          var left = document.createElement('div');
+          left.innerHTML = '<div style="font-size:0.7rem; font-weight:700; color:var(--gold-dark);">' + sanitizeText(acc.method, 30) + '</div>' +
+            '<div style="font-size:0.86rem; font-weight:700;">' + sanitizeText(acc.accountNumber, 40) + '</div>' +
+            '<div style="font-size:0.7rem; color:var(--taupe);">a.n. ' + sanitizeText(acc.accountName, 60) + '</div>';
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'btn-outline';
+          btn.style.cssText = 'padding:5px 10px; font-size:0.7rem; flex-shrink:0;';
+          btn.textContent = 'SALIN';
+          btn.addEventListener('click', function () {
+            copyText(acc.accountNumber, acc.method || 'Nomor Rekening');
+          });
+          ['mousedown', 'touchstart', 'pointerdown'].forEach(function (ev) {
+            btn.addEventListener(ev, function (e) { e.stopPropagation(); }, { passive: true });
+          });
+          row.appendChild(left);
+          row.appendChild(btn);
+          extraWrap.appendChild(row);
+        });
+      }
     }
 
     /* Page 10: Closing */
@@ -447,7 +486,7 @@
 
       pageCtrl = new global.IvoryBinderEngine.PageFlipController($('binder-viewport'), pages, function (idx) {
         updateNavUI(idx);
-      });
+      }, cfg.animation || {});
 
       autoCtrl = new global.IvoryBinderEngine.AutoFlipController(
         pageCtrl,

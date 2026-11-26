@@ -23,51 +23,135 @@
     el.classList.remove('hidden');
   }
 
+  function getOrderedPageItems() {
+    var baseMap = {};
+    BUILTIN_PAGE_LABELS.forEach(function (b) {
+      baseMap[String(b.num)] = { key: String(b.num), label: b.label, isCustom: false };
+    });
+    var custom = Array.isArray(cfg.customPages) ? cfg.customPages : [];
+    custom.forEach(function (cp, idx) {
+      var k = cp.id || ('cp_' + idx);
+      cp.id = k;
+      baseMap[k] = { key: k, label: 'Kustom: ' + (cp.title || 'Halaman Tambahan'), isCustom: true, customIdx: idx };
+    });
+
+    var order = Array.isArray(cfg.pageOrder) && cfg.pageOrder.length
+      ? cfg.pageOrder.slice()
+      : ['2', '3', '4', '5', '6', '7', '8', '9', '10'];
+
+    Object.keys(baseMap).forEach(function (k) {
+      if (order.indexOf(k) === -1) order.push(k);
+    });
+
+    cfg.pageOrder = order.filter(function (k) { return Boolean(baseMap[k]); });
+    return cfg.pageOrder.map(function (k) { return baseMap[k]; });
+  }
+
   function renderPageSettings() {
     var grid = $('builtin-pages-grid');
+    var items = getOrderedPageItems();
     if (grid) {
       grid.innerHTML = '';
+      grid.style.gridTemplateColumns = '1fr';
       var vis = cfg.pageVisibility || {};
-      BUILTIN_PAGE_LABELS.forEach(function (item) {
-        var lbl = document.createElement('label');
-        lbl.className = 'check-row';
-        var cb = document.createElement('input');
-        cb.type = 'checkbox';
-        cb.checked = vis[item.num] !== false && vis[String(item.num)] !== false;
-        cb.setAttribute('data-page-vis', String(item.num));
-        lbl.appendChild(cb);
-        var span = document.createElement('span');
-        span.textContent = item.label;
-        lbl.appendChild(span);
-        grid.appendChild(lbl);
-      });
-    }
-
-    var listEl = $('custom-pages-list');
-    if (listEl) {
-      listEl.innerHTML = '';
-      var custom = Array.isArray(cfg.customPages) ? cfg.customPages : [];
-      custom.forEach(function (cp, idx) {
+      items.forEach(function (item, pos) {
         var row = document.createElement('div');
         row.className = 'check-row';
         row.style.justifyContent = 'space-between';
-        var info = document.createElement('div');
-        info.innerHTML = '<strong>' + escapeHtml(cp.title || 'Halaman Kustom') + '</strong>' +
-          (cp.eyebrow ? ' <span style="color:var(--taupe);">(' + escapeHtml(cp.eyebrow) + ')</span>' : '');
-        var del = document.createElement('button');
-        del.type = 'button';
-        del.className = 'btn btn-danger';
-        del.textContent = 'Hapus';
-        del.addEventListener('click', function () {
-          cfg.customPages.splice(idx, 1);
-          pushConfig('pages-status', 'Halaman kustom dihapus & disimpan.');
+
+        var left = document.createElement('label');
+        left.style.cssText = 'display:flex; align-items:center; gap:8px; cursor:pointer; flex:1;';
+        if (!item.isCustom) {
+          var cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.checked = vis[item.key] !== false && vis[Number(item.key)] !== false;
+          cb.setAttribute('data-page-vis', item.key);
+          left.appendChild(cb);
+        }
+        var span = document.createElement('span');
+        span.textContent = (pos + 2) + '. ' + item.label;
+        left.appendChild(span);
+
+        var btns = document.createElement('div');
+        btns.style.cssText = 'display:flex; gap:4px;';
+
+        var up = document.createElement('button');
+        up.type = 'button';
+        up.className = 'btn btn-outline';
+        up.style.padding = '4px 8px';
+        up.textContent = '▲';
+        up.disabled = pos === 0;
+        up.addEventListener('click', function () {
+          var tmp = cfg.pageOrder[pos - 1];
+          cfg.pageOrder[pos - 1] = cfg.pageOrder[pos];
+          cfg.pageOrder[pos] = tmp;
           renderPageSettings();
         });
-        row.appendChild(info);
-        row.appendChild(del);
-        listEl.appendChild(row);
+
+        var down = document.createElement('button');
+        down.type = 'button';
+        down.className = 'btn btn-outline';
+        down.style.padding = '4px 8px';
+        down.textContent = '▼';
+        down.disabled = pos === items.length - 1;
+        down.addEventListener('click', function () {
+          var tmp = cfg.pageOrder[pos + 1];
+          cfg.pageOrder[pos + 1] = cfg.pageOrder[pos];
+          cfg.pageOrder[pos] = tmp;
+          renderPageSettings();
+        });
+
+        btns.appendChild(up);
+        btns.appendChild(down);
+
+        if (item.isCustom) {
+          var del = document.createElement('button');
+          del.type = 'button';
+          del.className = 'btn btn-danger';
+          del.style.padding = '4px 8px';
+          del.textContent = 'Hapus';
+          del.addEventListener('click', function () {
+            cfg.customPages.splice(item.customIdx, 1);
+            cfg.pageOrder = cfg.pageOrder.filter(function (k) { return k !== item.key; });
+            pushConfig('pages-status', 'Halaman kustom dihapus & disimpan.');
+            renderPageSettings();
+          });
+          btns.appendChild(del);
+        }
+
+        row.appendChild(left);
+        row.appendChild(btns);
+        grid.appendChild(row);
       });
     }
+    var listEl = $('custom-pages-list');
+    if (listEl) listEl.innerHTML = '';
+  }
+
+  function renderExtraAccounts() {
+    var box = $('extra-accounts-list');
+    if (!box) return;
+    box.innerHTML = '';
+    var list = (cfg.gift && Array.isArray(cfg.gift.extraAccounts)) ? cfg.gift.extraAccounts : [];
+    list.forEach(function (acc, idx) {
+      var row = document.createElement('div');
+      row.className = 'check-row';
+      row.style.justifyContent = 'space-between';
+      var info = document.createElement('div');
+      info.innerHTML = '<strong>' + escapeHtml(acc.method) + '</strong> — ' + escapeHtml(acc.accountNumber) + ' <span style="color:var(--taupe);">(a.n. ' + escapeHtml(acc.accountName) + ')</span>';
+      var del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'btn btn-danger';
+      del.style.padding = '4px 8px';
+      del.textContent = 'Hapus';
+      del.addEventListener('click', function () {
+        cfg.gift.extraAccounts.splice(idx, 1);
+        renderExtraAccounts();
+      });
+      row.appendChild(info);
+      row.appendChild(del);
+      box.appendChild(row);
+    });
   }
 
   function escapeHtml(s) {
@@ -116,7 +200,12 @@
     $('f-closing-family').value = (cfg.closing && cfg.closing.family) || '';
 
     $('f-music-enabled').value = cfg.music && cfg.music.enabled === false ? 'false' : 'true';
+    $('f-autoplay-enabled').value = (cfg.autoplay && cfg.autoplay.enabled === false) ? 'false' : 'true';
     $('f-autoplay-ms').value = (cfg.autoplay && cfg.autoplay.intervalMs) || 3800;
+    $('f-anim-mode').value = (cfg.animation && cfg.animation.mode) || 'stpageflip';
+    $('f-anim-fliptime').value = (cfg.animation && cfg.animation.flipTimeMs) || 750;
+    $('f-anim-shadow').value = String((cfg.animation && typeof cfg.animation.shadowOpacity === 'number') ? cfg.animation.shadowOpacity : 0.45);
+    renderExtraAccounts();
     $('f-col-ivory').value = (cfg.theme && cfg.theme.ivory) || '#F8F4EA';
     $('f-col-gold').value = (cfg.theme && cfg.theme.gold) || '#C6A66B';
     $('f-col-charcoal').value = (cfg.theme && cfg.theme.charcoal) || '#38352F';
@@ -171,7 +260,14 @@
     };
 
     cfg.music.enabled = $('f-music-enabled').value === 'true';
+    cfg.autoplay = cfg.autoplay || {};
+    cfg.autoplay.enabled = $('f-autoplay-enabled').value === 'true';
     cfg.autoplay.intervalMs = parseInt($('f-autoplay-ms').value || '3800', 10);
+    cfg.animation = {
+      mode: $('f-anim-mode').value,
+      flipTimeMs: Math.max(300, Math.min(2000, parseInt($('f-anim-fliptime').value || '750', 10))),
+      shadowOpacity: parseFloat($('f-anim-shadow').value || '0.45')
+    };
     cfg.theme.ivory = $('f-col-ivory').value;
     cfg.theme.gold = $('f-col-gold').value;
     cfg.theme.charcoal = $('f-col-charcoal').value;
@@ -384,6 +480,24 @@
 
     $('btn-save-config').addEventListener('click', saveConfig);
     $('btn-save-theme').addEventListener('click', saveConfig);
+
+    $('btn-add-extra-account').addEventListener('click', function () {
+      var method = $('ea-method').value.trim();
+      var num = $('ea-number').value.trim();
+      var name = $('ea-name').value.trim();
+      if (!method || !num) {
+        showStatus('config-status', 'Metode dan nomor rekening tambahan wajib diisi.');
+        return;
+      }
+      cfg.gift = cfg.gift || {};
+      cfg.gift.extraAccounts = Array.isArray(cfg.gift.extraAccounts) ? cfg.gift.extraAccounts : [];
+      cfg.gift.extraAccounts.push({ method: method, accountNumber: num, accountName: name || cfg.bride.fullName });
+      $('ea-method').value = '';
+      $('ea-number').value = '';
+      $('ea-name').value = '';
+      renderExtraAccounts();
+      showStatus('config-status', 'Rekening ditambahkan. Klik "Simpan Perubahan Data" untuk menyimpan ke D1.');
+    });
     $('btn-save-pages').addEventListener('click', function () {
       collectForm();
       pushConfig('pages-status', 'Pengaturan halaman berhasil disimpan ke D1.');
@@ -398,7 +512,10 @@
         return;
       }
       cfg.customPages = Array.isArray(cfg.customPages) ? cfg.customPages : [];
-      cfg.customPages.push({ eyebrow: eyebrow, title: title, body: body });
+      var newKey = 'cp_' + Date.now();
+      cfg.customPages.push({ id: newKey, eyebrow: eyebrow, title: title, body: body });
+      cfg.pageOrder = Array.isArray(cfg.pageOrder) ? cfg.pageOrder : ['2','3','4','5','6','7','8','9','10'];
+      cfg.pageOrder.push(newKey);
       $('cp-eyebrow').value = '';
       $('cp-title').value = '';
       $('cp-body').value = '';

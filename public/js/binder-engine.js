@@ -26,10 +26,11 @@
   }
 
   /* PageFlipController: wraps StPageFlip if available, otherwise uses 3D CSS perspective flip */
-  function PageFlipController(viewportEl, pages, onPageChange) {
+  function PageFlipController(viewportEl, pages, onPageChange, options) {
     this.viewportEl = viewportEl;
     this.pages = pages;
     this.onPageChange = onPageChange || function () {};
+    this.options = options || {};
     this.currentIndex = 0;
     this.totalPages = pages.length;
     this.stFlip = null;
@@ -39,7 +40,10 @@
 
   PageFlipController.prototype._init = function () {
     var self = this;
-    var useSt = typeof global.St !== 'undefined' && global.St && typeof global.St.PageFlip === 'function';
+    var forceCss = this.options.mode === 'css3d';
+    var flipTime = parseInt(this.options.flipTimeMs || 750, 10);
+    var shadowOp = typeof this.options.shadowOpacity === 'number' ? this.options.shadowOpacity : 0.45;
+    var useSt = !forceCss && typeof global.St !== 'undefined' && global.St && typeof global.St.PageFlip === 'function';
     if (useSt) {
       try {
         this.mode = 'stpageflip';
@@ -54,12 +58,12 @@
           maxWidth: 620,
           minHeight: 420,
           maxHeight: 820,
-          drawShadow: true,
-          maxShadowOpacity: 0.45,
+          drawShadow: shadowOp > 0,
+          maxShadowOpacity: shadowOp,
           showCover: false,
           mobileScrollSupport: true,
           usePortrait: true,
-          flippingTime: 750
+          flippingTime: flipTime
         });
         this.stFlip.loadFromHTML(this.pages);
         this.stFlip.on('flip', function (e) {
@@ -74,6 +78,7 @@
 
     this.viewportEl.classList.add('fallback-pages');
     this.pages.forEach(function (p, idx) {
+      p.style.transitionDuration = (flipTime / 1000) + 's';
       p.classList.remove('is-active', 'is-flipped', 'is-entering');
       if (idx === 0) p.classList.add('is-active');
     });
