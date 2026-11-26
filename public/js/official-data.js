@@ -2,7 +2,7 @@
   'use strict';
 
   var OFFICIAL_DATA = {
-    projectName: 'IVORY SPIRAL BINDER — SAE PUDIN & KHODIJAH',
+    projectName: 'Undangan Pernikahan — Saepudin Hidayatullah & Khodijah',
     groom: {
       fullName: 'Saepudin Hidayatullah',
       nickname: 'Udin',
@@ -16,6 +16,11 @@
       parents: 'Putri dari Bapak Muhammad Junaedi dan Ibu Imas Rohibah.'
     },
     dateLabel: 'Kamis, 31 Desember 2026',
+    opening: {
+      salam: "Assalamu'alaikum Warahmatullahi Wabarakatuh.",
+      paragraph1: 'Dengan memohon rahmat dan ridha Allah SWT, kami bermaksud menyelenggarakan acara pernikahan putra-putri kami.',
+      paragraph2: 'Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.'
+    },
     events: {
       resepsi: {
         title: 'Resepsi Pernikahan',
@@ -44,7 +49,8 @@
       method: 'DANA',
       accountNumber: '+62 895-2451-8794',
       accountName: 'Khodijah',
-      note: 'Bagi keluarga, kerabat, dan sahabat yang berkenan menyampaikan tanda kasih, dapat melalui informasi berikut. Kehadiran serta doa restu merupakan kebahagiaan yang paling berarti bagi kami.'
+      note: 'Bagi keluarga, kerabat, dan sahabat yang berkenan menyampaikan tanda kasih, dapat melalui informasi berikut. Kehadiran serta doa restu merupakan kebahagiaan yang paling berarti bagi kami.',
+      voluntaryNote: 'Pemberian tanda kasih bersifat sukarela.'
     },
     kalamHikmah: {
       paragraphs: [
@@ -61,7 +67,7 @@
         'Atas kehadiran, doa, dan perhatian yang diberikan, kami mengucapkan terima kasih.'
       ],
       salam: "Wassalamu'alaikum Warahmatullahi Wabarakatuh.",
-      family: 'Keluarga Besar: Saepudin Hidayatullah & Khodijah.'
+      family: 'Saepudin Hidayatullah & Khodijah.'
     },
     theme: {
       ivory: '#F8F4EA',

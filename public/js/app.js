@@ -175,6 +175,13 @@
     if ($('cover-arabic')) $('cover-arabic').textContent = cfg.groom.arabicName + '  &  ' + cfg.bride.arabicName;
     if ($('cover-date')) $('cover-date').textContent = cfg.dateLabel;
 
+    /* Page 2: Pembukaan */
+    if (cfg.opening) {
+      if ($('opening-salam')) $('opening-salam').textContent = cfg.opening.salam || '';
+      if ($('opening-p1')) $('opening-p1').textContent = cfg.opening.paragraph1 || '';
+      if ($('opening-p2')) $('opening-p2').textContent = cfg.opening.paragraph2 || '';
+    }
+
     /* Page 3: Kalam Hikmah */
     var hikmahBox = $('hikmah-body');
     if (hikmahBox && cfg.kalamHikmah) {
@@ -243,14 +250,23 @@
           quiet: 2
         });
       }
+      if ($('gift-title')) $('gift-title').textContent = 'Bagian B • ' + (cfg.gift.title || 'Tanda Kasih');
+      if ($('dana-method')) $('dana-method').textContent = cfg.gift.method || 'DANA';
       $('dana-number').textContent = cfg.gift.accountNumber;
       $('dana-name').textContent = 'a.n. ' + cfg.gift.accountName;
       $('dana-note').textContent = cfg.gift.note;
+      if ($('dana-voluntary') && cfg.gift.voluntaryNote) $('dana-voluntary').textContent = cfg.gift.voluntaryNote;
     }
 
     /* Page 10: Closing */
+    if (cfg.closing) {
+      if ($('closing-text') && Array.isArray(cfg.closing.paragraphs)) {
+        $('closing-text').textContent = cfg.closing.paragraphs.join(' ');
+      }
+      if ($('closing-salam') && cfg.closing.salam) $('closing-salam').textContent = cfg.closing.salam;
+    }
     if ($('closing-family')) {
-      $('closing-family').textContent = cfg.groom.fullName + ' & ' + cfg.bride.fullName + '.';
+      $('closing-family').textContent = (cfg.closing && cfg.closing.family) || (cfg.groom.fullName + ' & ' + cfg.bride.fullName + '.');
     }
   }
 
@@ -325,19 +341,17 @@
   }
 
   function startCountdown() {
-    if (!$('cd-days')) return;
+    if (!$('cd-days') && !$('cover-cd-days')) return;
     clearInterval(countdownTimer);
     var targetMs = new Date(cfg.events.resepsi.isoStart || '2026-12-31T08:00:00+07:00').getTime();
     function tick() {
       var diff = Math.max(0, targetMs - Date.now());
-      var d = Math.floor(diff / 86400000);
-      var h = Math.floor((diff % 86400000) / 3600000);
-      var m = Math.floor((diff % 3600000) / 60000);
-      var s = Math.floor((diff % 60000) / 1000);
-      $('cd-days').textContent = String(d).padStart(2, '0');
-      $('cd-hours').textContent = String(h).padStart(2, '0');
-      $('cd-mins').textContent = String(m).padStart(2, '0');
-      $('cd-secs').textContent = String(s).padStart(2, '0');
+      var d = String(Math.floor(diff / 86400000)).padStart(2, '0');
+      var h = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0');
+      var m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+      var s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+      if ($('cd-days')) { $('cd-days').textContent = d; $('cd-hours').textContent = h; $('cd-mins').textContent = m; $('cd-secs').textContent = s; }
+      if ($('cover-cd-days')) { $('cover-cd-days').textContent = d; $('cover-cd-hours').textContent = h; $('cover-cd-mins').textContent = m; $('cover-cd-secs').textContent = s; }
     }
     tick();
     countdownTimer = setInterval(tick, 1000);

@@ -93,10 +93,27 @@
     $('f-tablig-time').value = cfg.events.tablig.time;
     $('f-tablig-address').value = cfg.events.tablig.address;
 
+    $('f-date-label').value = cfg.dateLabel || '';
+    $('f-countdown-iso').value = cfg.events.resepsi.isoStart || '2026-12-31T08:00:00+07:00';
     $('f-loc-address').value = cfg.location.address;
     $('f-loc-maps').value = cfg.location.mapsUrl;
+
+    $('f-gift-title').value = (cfg.gift && cfg.gift.title) || 'Tanda Kasih';
+    $('f-gift-method').value = (cfg.gift && cfg.gift.method) || 'DANA';
+    $('f-gift-number').value = (cfg.gift && cfg.gift.accountNumber) || '';
+    $('f-gift-name').value = (cfg.gift && cfg.gift.accountName) || '';
+    $('f-gift-note').value = (cfg.gift && cfg.gift.note) || '';
+    $('f-gift-voluntary').value = (cfg.gift && cfg.gift.voluntaryNote) || 'Pemberian tanda kasih bersifat sukarela.';
+
+    $('f-opening-salam').value = (cfg.opening && cfg.opening.salam) || "Assalamu'alaikum Warahmatullahi Wabarakatuh.";
+    $('f-opening-p1').value = (cfg.opening && cfg.opening.paragraph1) || '';
+    $('f-opening-p2').value = (cfg.opening && cfg.opening.paragraph2) || '';
+
     $('f-hikmah').value = (cfg.kalamHikmah.paragraphs || []).join('\n\n');
     $('f-hikmah-closing').value = cfg.kalamHikmah.closing || '';
+    $('f-closing-text').value = (cfg.closing && Array.isArray(cfg.closing.paragraphs)) ? cfg.closing.paragraphs.join(' ') : '';
+    $('f-closing-salam').value = (cfg.closing && cfg.closing.salam) || "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
+    $('f-closing-family').value = (cfg.closing && cfg.closing.family) || '';
 
     $('f-music-enabled').value = cfg.music && cfg.music.enabled === false ? 'false' : 'true';
     $('f-autoplay-ms').value = (cfg.autoplay && cfg.autoplay.intervalMs) || 3800;
@@ -124,10 +141,34 @@
     cfg.events.tablig.time = $('f-tablig-time').value.trim();
     cfg.events.tablig.address = $('f-tablig-address').value.trim();
 
+    cfg.dateLabel = $('f-date-label').value.trim();
+    cfg.events.resepsi.isoStart = $('f-countdown-iso').value.trim();
     cfg.location.address = $('f-loc-address').value.trim();
     cfg.location.mapsUrl = $('f-loc-maps').value.trim();
+    cfg.events.resepsi.address = cfg.location.address;
+
+    cfg.gift = cfg.gift || {};
+    cfg.gift.title = $('f-gift-title').value.trim();
+    cfg.gift.method = $('f-gift-method').value.trim();
+    cfg.gift.accountNumber = $('f-gift-number').value.trim();
+    cfg.gift.accountName = $('f-gift-name').value.trim();
+    cfg.gift.note = $('f-gift-note').value.trim();
+    cfg.gift.voluntaryNote = $('f-gift-voluntary').value.trim();
+
+    cfg.opening = {
+      salam: $('f-opening-salam').value.trim(),
+      paragraph1: $('f-opening-p1').value.trim(),
+      paragraph2: $('f-opening-p2').value.trim()
+    };
+
     cfg.kalamHikmah.paragraphs = $('f-hikmah').value.split(/\n\s*\n/).map(function (s) { return s.trim(); }).filter(Boolean);
     cfg.kalamHikmah.closing = $('f-hikmah-closing').value.trim();
+
+    cfg.closing = {
+      paragraphs: [$('f-closing-text').value.trim()].filter(Boolean),
+      salam: $('f-closing-salam').value.trim(),
+      family: $('f-closing-family').value.trim()
+    };
 
     cfg.music.enabled = $('f-music-enabled').value === 'true';
     cfg.autoplay.intervalMs = parseInt($('f-autoplay-ms').value || '3800', 10);
