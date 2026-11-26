@@ -129,15 +129,43 @@
             <div class="fg"><label>Lokasi</label><input id="f-tablig-address" type="text" /></div>
           </div>
         </div>
-        <div class="grid-2" style="margin-top:10px;">
+        <hr style="margin:14px 0; border:none; border-top:1px solid var(--cream);" />
+        <h3 style="font-size:0.9rem; margin-bottom:8px;">Tanggal Cover, Hitung Mundur, &amp; Lokasi</h3>
+        <div class="grid-2">
+          <div class="fg"><label>Tanggal Utama di Cover</label><input id="f-date-label" type="text" /></div>
+          <div class="fg"><label>Target Hitung Mundur (ISO, mis. 2026-12-31T08:00:00+07:00)</label><input id="f-countdown-iso" type="text" /></div>
           <div class="fg"><label>Alamat Lengkap Lokasi</label><input id="f-loc-address" type="text" /></div>
           <div class="fg"><label>Tautan Google Maps</label><input id="f-loc-maps" type="url" /></div>
         </div>
+
+        <hr style="margin:14px 0; border:none; border-top:1px solid var(--cream);" />
+        <h3 style="font-size:0.9rem; margin-bottom:8px;">Tanda Kasih / Rekening (Halaman 9)</h3>
+        <div class="grid-2">
+          <div class="fg"><label>Judul Bagian</label><input id="f-gift-title" type="text" /></div>
+          <div class="fg"><label>Metode Pembayaran / Bank / E-Wallet</label><input id="f-gift-method" type="text" /></div>
+          <div class="fg"><label>Nomor Rekening / E-Wallet</label><input id="f-gift-number" type="text" /></div>
+          <div class="fg"><label>Atas Nama Penerima</label><input id="f-gift-name" type="text" /></div>
+        </div>
+        <div class="fg"><label>Pesan Pengantar Tanda Kasih</label><textarea id="f-gift-note" rows="2"></textarea></div>
+        <div class="fg"><label>Catatan Sukarela</label><input id="f-gift-voluntary" type="text" /></div>
+
+        <hr style="margin:14px 0; border:none; border-top:1px solid var(--cream);" />
+        <h3 style="font-size:0.9rem; margin-bottom:8px;">Pembukaan (Hal 2), Kalam Hikmah (Hal 3), &amp; Penutup (Hal 10)</h3>
+        <div class="grid-2">
+          <div class="fg"><label>Salam Pembuka (Hal 2)</label><input id="f-opening-salam" type="text" /></div>
+          <div class="fg"><label>Paragraf 1 Pembukaan (Hal 2)</label><input id="f-opening-p1" type="text" /></div>
+        </div>
+        <div class="fg"><label>Paragraf 2 Pembukaan (Hal 2)</label><input id="f-opening-p2" type="text" /></div>
         <div class="fg">
-          <label>Kalam Hikmah Pernikahan (3 Paragraf dipisah baris kosong)</label>
-          <textarea id="f-hikmah" rows="5"></textarea>
+          <label>Kalam Hikmah Pernikahan (pisahkan paragraf dengan baris kosong)</label>
+          <textarea id="f-hikmah" rows="4"></textarea>
         </div>
         <div class="fg"><label>Kalimat Penutup Kalam Hikmah</label><input id="f-hikmah-closing" type="text" /></div>
+        <div class="fg"><label>Teks Penutup (Hal 10)</label><textarea id="f-closing-text" rows="3"></textarea></div>
+        <div class="grid-2">
+          <div class="fg"><label>Salam Penutup (Hal 10)</label><input id="f-closing-salam" type="text" /></div>
+          <div class="fg"><label>Nama Keluarga Besar (Hal 10)</label><input id="f-closing-family" type="text" /></div>
+        </div>
         <button id="btn-save-config" type="button" class="btn">Simpan Perubahan Data</button>
         <div id="config-status" class="status-msg hidden"></div>
       </section>

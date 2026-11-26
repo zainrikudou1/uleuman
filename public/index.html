@@ -46,7 +46,13 @@
                 <div class="arabic-text cover-arabic" id="cover-arabic" dir="rtl" lang="ar">سيف الدين هداية الله &amp; خديجة</div>
                 <div class="divider-gold"><span class="divider-diamond"></span></div>
                 <div class="cover-date" id="cover-date">Kamis, 31 Desember 2026</div>
-                <div class="guest-box">
+                <div class="countdown-grid" style="margin-top:8px;" aria-label="Hitung mundur menuju acara">
+                  <div class="countdown-cell"><div class="countdown-num" id="cover-cd-days">00</div><div class="countdown-unit">Hari</div></div>
+                  <div class="countdown-cell"><div class="countdown-num" id="cover-cd-hours">00</div><div class="countdown-unit">Jam</div></div>
+                  <div class="countdown-cell"><div class="countdown-num" id="cover-cd-mins">00</div><div class="countdown-unit">Menit</div></div>
+                  <div class="countdown-cell"><div class="countdown-num" id="cover-cd-secs">00</div><div class="countdown-unit">Detik</div></div>
+                </div>
+                <div class="guest-box" style="margin-top:10px; margin-bottom:10px;">
                   <div class="guest-label">Kepada Yth.</div>
                   <div class="guest-name" id="guest-name-display">Bapak/Ibu/Saudara/i</div>
                 </div>
@@ -63,9 +69,9 @@
                 <div class="section-eyebrow">Mukadimah</div>
                 <div class="arabic-text" style="font-size:1.55rem; margin:10px 0;" dir="rtl" lang="ar">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
                 <div class="divider-gold"><span class="divider-diamond"></span></div>
-                <p class="body-serif" style="font-weight:700; margin-bottom:12px;">Assalamu'alaikum Warahmatullahi Wabarakatuh.</p>
-                <p class="body-serif" style="margin-bottom:12px;">Dengan memohon rahmat dan ridha Allah SWT, kami bermaksud menyelenggarakan acara pernikahan putra-putri kami.</p>
-                <p class="body-serif">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.</p>
+                <p class="body-serif" id="opening-salam" style="font-weight:700; margin-bottom:12px;">Assalamu'alaikum Warahmatullahi Wabarakatuh.</p>
+                <p class="body-serif" id="opening-p1" style="margin-bottom:12px;">Dengan memohon rahmat dan ridha Allah SWT, kami bermaksud menyelenggarakan acara pernikahan putra-putri kami.</p>
+                <p class="body-serif" id="opening-p2">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.</p>
               </div>
               <span class="page-number-badge">2</span>
             </div>
@@ -198,14 +204,14 @@
 
                 <div class="info-card" style="margin-bottom:0;">
                   <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
-                    <span class="section-eyebrow" style="margin:0;">Bagian B • Tanda Kasih</span>
-                    <span class="dana-badge">DANA</span>
+                    <span class="section-eyebrow" id="gift-title" style="margin:0;">Bagian B • Tanda Kasih</span>
+                    <span class="dana-badge" id="dana-method">DANA</span>
                   </div>
                   <p style="font-size:0.74rem; line-height:1.45; color:var(--taupe); margin-bottom:6px;" id="dana-note">Bagi keluarga, kerabat, dan sahabat yang berkenan menyampaikan tanda kasih, dapat melalui informasi berikut. Kehadiran serta doa restu merupakan kebahagiaan yang paling berarti bagi kami.</p>
                   <div style="font-family:var(--font-serif); font-size:1.15rem; font-weight:700;" id="dana-number">+62 895-2451-8794</div>
                   <div style="font-size:0.78rem; color:var(--taupe); margin-bottom:6px;" id="dana-name">a.n. Khodijah</div>
-                  <button id="btn-copy-dana" type="button" class="btn-outline" style="width:100%;">SALIN NOMOR DANA</button>
-                  <div style="font-size:0.68rem; color:var(--taupe); text-align:center; margin-top:4px;">Pemberian tanda kasih bersifat sukarela.</div>
+                  <button id="btn-copy-dana" type="button" class="btn-outline" style="width:100%;">SALIN NOMOR</button>
+                  <div id="dana-voluntary" style="font-size:0.68rem; color:var(--taupe); text-align:center; margin-top:4px;">Pemberian tanda kasih bersifat sukarela.</div>
                 </div>
               </div>
               <span class="page-number-badge">9</span>
@@ -247,8 +253,8 @@
                 <div class="wishes-list" id="wishes-list"></div>
 
                 <div style="margin-top:8px; padding-top:8px; border-top:1px solid rgba(198,166,107,0.4); font-family:var(--font-serif); font-size:0.82rem; line-height:1.45; text-align:center;">
-                  <p>Tiada yang lebih kami harapkan selain doa dan restu dari keluarga, kerabat, serta sahabat sekalian. Semoga setiap langkah menuju hari bahagia ini senantiasa berada dalam limpahan rahmat dan keberkahan Allah SWT. Atas kehadiran, doa, dan perhatian yang diberikan, kami mengucapkan terima kasih.</p>
-                  <p style="font-weight:700; margin-top:4px;">Wassalamu'alaikum Warahmatullahi Wabarakatuh.</p>
+                  <p id="closing-text">Tiada yang lebih kami harapkan selain doa dan restu dari keluarga, kerabat, serta sahabat sekalian. Semoga setiap langkah menuju hari bahagia ini senantiasa berada dalam limpahan rahmat dan keberkahan Allah SWT. Atas kehadiran, doa, dan perhatian yang diberikan, kami mengucapkan terima kasih.</p>
+                  <p id="closing-salam" style="font-weight:700; margin-top:4px;">Wassalamu'alaikum Warahmatullahi Wabarakatuh.</p>
                   <p style="color:var(--taupe); margin-top:2px;">Keluarga Besar: <strong id="closing-family">Saepudin Hidayatullah &amp; Khodijah.</strong></p>
                 </div>
               </div>
