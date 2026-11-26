@@ -91,7 +91,7 @@
         <button class="tab-btn active" data-tab="tab-data">Mempelai &amp; Acara</button>
         <button class="tab-btn" data-tab="tab-pages">Kelola Halaman</button>
         <button class="tab-btn" data-tab="tab-media">Galeri &amp; Foto</button>
-        <button class="tab-btn" data-tab="tab-music">Musik &amp; Tema</button>
+        <button class="tab-btn" data-tab="tab-music">Musik, Tema &amp; Animasi</button>
         <button class="tab-btn" data-tab="tab-guests">Tamu &amp; Link WA</button>
         <button class="tab-btn" data-tab="tab-rsvp">RSVP &amp; Export CSV</button>
       </div>
@@ -148,6 +148,29 @@
         </div>
         <div class="fg"><label>Pesan Pengantar Tanda Kasih</label><textarea id="f-gift-note" rows="2"></textarea></div>
         <div class="fg"><label>Catatan Sukarela</label><input id="f-gift-voluntary" type="text" /></div>
+        <div style="margin-top:10px; padding:10px; border:1px dashed var(--gold); border-radius:8px;">
+          <div style="font-size:0.82rem; font-weight:700; margin-bottom:8px;">Rekening / E-Wallet Tambahan (GoPay, ShopeePay, OVO, Bank, dll)</div>
+          <div class="grid-2">
+            <div class="fg">
+              <label>Metode (GoPay / ShopeePay / OVO / BCA / dll)</label>
+              <input id="ea-method" type="text" list="ewallet-presets" placeholder="Contoh: GoPay" />
+              <datalist id="ewallet-presets">
+                <option value="GoPay"></option>
+                <option value="ShopeePay"></option>
+                <option value="OVO"></option>
+                <option value="LinkAja"></option>
+                <option value="BCA"></option>
+                <option value="BRI"></option>
+                <option value="Mandiri"></option>
+                <option value="BSI"></option>
+              </datalist>
+            </div>
+            <div class="fg"><label>Nomor Rekening / E-Wallet</label><input id="ea-number" type="text" placeholder="0812xxxx / 1234567890" /></div>
+          </div>
+          <div class="fg"><label>Atas Nama</label><input id="ea-name" type="text" placeholder="Nama Pemilik Rekening" /></div>
+          <button id="btn-add-extra-account" type="button" class="btn btn-outline">+ Tambah Rekening</button>
+          <div id="extra-accounts-list" style="margin-top:10px; display:flex; flex-direction:column; gap:6px;"></div>
+        </div>
 
         <hr style="margin:14px 0; border:none; border-top:1px solid var(--cream);" />
         <h3 style="font-size:0.9rem; margin-bottom:8px;">Pembukaan (Hal 2), Kalam Hikmah (Hal 3), &amp; Penutup (Hal 10)</h3>
@@ -227,8 +250,35 @@
             </select>
           </div>
           <div class="fg">
+            <label>Autoplay Saat Cover Dibuka</label>
+            <select id="f-autoplay-enabled">
+              <option value="true">Aktif (Otomatis jalan)</option>
+              <option value="false">Nonaktif (Manual saja)</option>
+            </select>
+          </div>
+          <div class="fg">
             <label>Jeda Semi-Autoplay (ms)</label>
             <input id="f-autoplay-ms" type="number" min="2000" max="10000" step="200" />
+          </div>
+          <div class="fg">
+            <label>Mode Animasi Balik Halaman</label>
+            <select id="f-anim-mode">
+              <option value="stpageflip">3D Page Curl Realistis (StPageFlip)</option>
+              <option value="css3d">3D Flip Cepat &amp; Ringan (CSS 3D)</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Kecepatan Flip Halaman (ms, mis. 750)</label>
+            <input id="f-anim-fliptime" type="number" min="300" max="2000" step="50" />
+          </div>
+          <div class="fg">
+            <label>Intensitas Bayangan Lipatan Kertas</label>
+            <select id="f-anim-shadow">
+              <option value="0.55">Tebal (0.55)</option>
+              <option value="0.45">Normal (0.45)</option>
+              <option value="0.2">Halus (0.20)</option>
+              <option value="0">Tanpa Bayangan (0)</option>
+            </select>
           </div>
         </div>
         <div class="fg">
