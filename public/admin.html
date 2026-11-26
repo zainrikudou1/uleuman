@@ -48,6 +48,10 @@
       width: 100%; padding: 8px 10px; border: 1px solid rgba(198,166,107,0.7); border-radius: 6px;
       background: #FFFDF8; color: var(--charcoal); font-family: inherit; font-size: 0.84rem;
     }
+    .check-row {
+      display: flex; align-items: center; gap: 8px; padding: 7px 10px;
+      border: 1px solid rgba(198,166,107,0.45); border-radius: 8px; background: #FFFDF8; font-size: 0.82rem;
+    }
     table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; }
     th, td { padding: 8px; border-bottom: 1px solid var(--cream); text-align: left; }
     th { background: var(--cream); font-weight: 700; }
@@ -63,15 +67,15 @@
         <div style="font-size:0.78rem; color:var(--taupe);">Saepudin Hidayatullah &amp; Khodijah • Kamis, 31 Desember 2026</div>
       </div>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <a href="/generator.html" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Generator WA</a>
         <a href="/" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Pratinjau Binder</a>
         <button id="btn-logout" type="button" class="btn btn-danger hidden">Keluar</button>
       </div>
     </header>
 
-    <!-- Login Card -->
     <section id="login-card" class="card" style="max-width:420px; margin:40px auto;">
       <h2 style="font-family:'Cormorant Garamond',serif; margin-bottom:8px;">Login Admin</h2>
-      <p style="font-size:0.8rem; color:var(--taupe); margin-bottom:12px;">Masukkan kata sandi admin untuk mengelola data undangan, galeri, musik, tamu, dan RSVP.</p>
+      <p style="font-size:0.8rem; color:var(--taupe); margin-bottom:12px;">Masukkan kata sandi admin untuk mengelola data undangan, halaman, galeri, musik, tamu, dan RSVP.</p>
       <form id="login-form">
         <div class="fg">
           <label for="admin-password">Kata Sandi Admin</label>
@@ -82,17 +86,16 @@
       <div id="login-status" class="status-msg hidden"></div>
     </section>
 
-    <!-- Main Admin Workspace -->
     <main id="admin-workspace" class="hidden">
       <div class="tabs">
         <button class="tab-btn active" data-tab="tab-data">Mempelai &amp; Acara</button>
+        <button class="tab-btn" data-tab="tab-pages">Kelola Halaman</button>
         <button class="tab-btn" data-tab="tab-media">Galeri &amp; Foto</button>
         <button class="tab-btn" data-tab="tab-music">Musik &amp; Tema</button>
         <button class="tab-btn" data-tab="tab-guests">Tamu &amp; Link WA</button>
         <button class="tab-btn" data-tab="tab-rsvp">RSVP &amp; Export CSV</button>
       </div>
 
-      <!-- TAB 1: Mempelai, Orang Tua, Acara, Lokasi, Kalam Hikmah -->
       <section id="tab-data" class="panel active card">
         <h2 style="font-family:'Cormorant Garamond',serif; margin-bottom:12px;">Data Resmi Undangan</h2>
         <div class="grid-2">
@@ -139,7 +142,25 @@
         <div id="config-status" class="status-msg hidden"></div>
       </section>
 
-      <!-- TAB 2: Media & Galeri -->
+      <!-- TAB BARU: Kelola Halaman (Tambah / Kurangi Halaman) -->
+      <section id="tab-pages" class="panel card">
+        <h2 style="font-family:'Cormorant Garamond',serif; margin-bottom:8px;">Kelola Halaman Binder</h2>
+        <p style="font-size:0.8rem; color:var(--taupe); margin-bottom:12px;">Centang untuk menampilkan atau hilangkan centang untuk menyembunyikan halaman bawaan (Cover depan selalu aktif), atau tambahkan halaman kustom baru.</p>
+        <div id="builtin-pages-grid" class="grid-2" style="margin-bottom:14px;"></div>
+        <button id="btn-save-pages" type="button" class="btn">Simpan Pengaturan Halaman</button>
+        <div id="pages-status" class="status-msg hidden"></div>
+
+        <hr style="margin:18px 0; border:none; border-top:1px solid var(--cream);" />
+        <h3 style="font-family:'Cormorant Garamond',serif; margin-bottom:8px;">Tambah Halaman Kustom Baru</h3>
+        <div class="grid-2">
+          <div class="fg"><label>Subjudul / Label Atas</label><input id="cp-eyebrow" type="text" placeholder="Contoh: Turut Mengundang / Protokol" /></div>
+          <div class="fg"><label>Judul Halaman</label><input id="cp-title" type="text" placeholder="Contoh: Turut Mengundang" /></div>
+        </div>
+        <div class="fg"><label>Isi Halaman (pisahkan paragraf dengan baris kosong)</label><textarea id="cp-body" rows="4" placeholder="Tuliskan isi halaman tambahan di sini..."></textarea></div>
+        <button id="btn-add-custom-page" type="button" class="btn">Tambah Halaman ke Binder</button>
+        <div id="custom-pages-list" style="margin-top:14px; display:flex; flex-direction:column; gap:8px;"></div>
+      </section>
+
       <section id="tab-media" class="panel card">
         <h2 style="font-family:'Cormorant Garamond',serif; margin-bottom:12px;">Kelola Foto Mempelai &amp; Galeri Scrapbook</h2>
         <div class="grid-2">
@@ -167,7 +188,6 @@
         <div id="media-list" class="grid-2" style="margin-top:14px;"></div>
       </section>
 
-      <!-- TAB 3: Musik, Warna, & Halaman -->
       <section id="tab-music" class="panel card">
         <h2 style="font-family:'Cormorant Garamond',serif; margin-bottom:12px;">Pengaturan Musik, Warna, &amp; Autoplay</h2>
         <div class="grid-2">
@@ -195,7 +215,6 @@
         <button id="btn-save-theme" type="button" class="btn">Simpan Musik &amp; Tema</button>
       </section>
 
-      <!-- TAB 4: Tamu & Link WhatsApp -->
       <section id="tab-guests" class="panel card">
         <h2 style="font-family:'Cormorant Garamond',serif; margin-bottom:12px;">Kelola Tamu &amp; Generator Link WhatsApp</h2>
         <div class="grid-2">
@@ -210,7 +229,6 @@
         </table>
       </section>
 
-      <!-- TAB 5: RSVP & Export CSV -->
       <section id="tab-rsvp" class="panel card">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
           <h2 style="font-family:'Cormorant Garamond',serif;">Daftar RSVP &amp; Ucapan</h2>
