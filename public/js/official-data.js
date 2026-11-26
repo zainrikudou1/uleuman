@@ -16,6 +16,7 @@
       parents: 'Putri dari Bapak Muhammad Junaedi dan Ibu Imas Rohibah.'
     },
     dateLabel: 'Kamis, 31 Desember 2026',
+    copyrightText: '© 2026 Saepudin Hidayatullah & Khodijah',
     opening: {
       salam: "Assalamu'alaikum Warahmatullahi Wabarakatuh.",
       paragraph1: 'Dengan memohon rahmat dan ridha Allah SWT, kami bermaksud menyelenggarakan acara pernikahan putra-putri kami.',

@@ -181,6 +181,11 @@
     if ($('cover-couple')) $('cover-couple').textContent = cfg.groom.fullName + ' & ' + cfg.bride.fullName;
     if ($('cover-arabic')) $('cover-arabic').textContent = cfg.groom.arabicName + '  &  ' + cfg.bride.arabicName;
     if ($('cover-date')) $('cover-date').textContent = cfg.dateLabel;
+    if ($('site-copyright')) {
+      var cr = typeof cfg.copyrightText === 'string' ? cfg.copyrightText.trim() : '© 2026 Saepudin Hidayatullah & Khodijah';
+      $('site-copyright').textContent = cr;
+      $('site-copyright').style.display = cr ? '' : 'none';
+    }
 
     /* Page 2: Pembukaan */
     if (cfg.opening) {

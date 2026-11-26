@@ -198,6 +198,7 @@
     $('f-closing-text').value = (cfg.closing && Array.isArray(cfg.closing.paragraphs)) ? cfg.closing.paragraphs.join(' ') : '';
     $('f-closing-salam').value = (cfg.closing && cfg.closing.salam) || "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
     $('f-closing-family').value = (cfg.closing && cfg.closing.family) || '';
+    $('f-copyright-text').value = typeof cfg.copyrightText === 'string' ? cfg.copyrightText : '© 2026 Saepudin Hidayatullah & Khodijah';
 
     $('f-music-enabled').value = cfg.music && cfg.music.enabled === false ? 'false' : 'true';
     $('f-autoplay-enabled').value = (cfg.autoplay && cfg.autoplay.enabled === false) ? 'false' : 'true';
@@ -258,6 +259,7 @@
       salam: $('f-closing-salam').value.trim(),
       family: $('f-closing-family').value.trim()
     };
+    cfg.copyrightText = $('f-copyright-text').value.trim();
 
     cfg.music.enabled = $('f-music-enabled').value === 'true';
     cfg.autoplay = cfg.autoplay || {};
